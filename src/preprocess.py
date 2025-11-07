@@ -73,7 +73,12 @@ def build_dataloaders(cfg: DictConfig, cache_dir: str):
             remove_columns=val_ds.column_names,
         )
         collator = DataCollatorForTokenClassification(tokenizer)
-        label_list = raw["train"].features["ner_tags"].feature.names
+        # Try to get label list from dataset features, or use standard CoNLL-2003 labels
+        try:
+            label_list = raw["train"].features["ner_tags"].feature.names
+        except AttributeError:
+            # Standard CoNLL-2003 NER labels (IOB2 format)
+            label_list = ["O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "B-MISC", "I-MISC"]
     else:
         raw = load_dataset(ds_cfg.hf_id, cache_dir=cache_dir)
         train_ds = raw[ds_cfg.splits.train]
