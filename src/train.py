@@ -256,7 +256,10 @@ def main(cfg: DictConfig):
         import yaml
         with open(run_config_path, 'r') as f:
             run_cfg = OmegaConf.create(yaml.safe_load(f))
+        # Disable struct mode to allow merging new keys
+        OmegaConf.set_struct(cfg, False)
         cfg = OmegaConf.merge(cfg, run_cfg)
+        OmegaConf.set_struct(cfg, True)
 
     _apply_mode_overrides(cfg)
     _ensure_results_dir(cfg)
