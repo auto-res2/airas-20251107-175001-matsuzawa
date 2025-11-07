@@ -1,0 +1,68 @@
+run_id: proposed-iter1-CoNLL-2003
+method: proposed
+model:
+  host_model_name: distilbert-base-uncased
+  hidden_size: 768
+  num_layers: 6
+  max_position_embeddings: 512
+  vocab_size: 30522
+adapter:
+  name: UniHyperLoRA
+  atoms: 128
+  anchor_dim: 256
+  router_top_k: 2
+  quant_bits: 4
+  freeze_base_adapter: true
+  train_bias_delta_only: true
+  bias_bits: 4
+  lambda_F: 0.05
+  lambda_Q: 1.0e-5
+dataset:
+  name: conll2003
+  hf_id: eriktks/conll2003
+  splits:
+    train: train
+    validation: validation
+    test: test
+  max_length: 128
+training:
+  optimizer: adamw
+  learning_rate: 2.0e-4
+  batch_size: 32
+  max_steps: 500
+  weight_decay: 0.0
+  gradient_accumulation_steps: 1
+  lr_scheduler: linear
+  warmup_steps: 50
+  seed: 42
+  update_param_groups:
+    - adapter.bias_delta
+evaluation:
+  eval_steps: 100
+  metric: seqeval
+budget_constraints:
+  max_extra_params_mb: 1.0
+  max_flop_overhead_pct: 10
+optuna:
+  n_trials: 25
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1.0e-5
+      high: 5.0e-4
+    lambda_F:
+      type: uniform
+      low: 0.01
+      high: 0.1
+    lambda_Q:
+      type: loguniform
+      low: 1.0e-6
+      high: 1.0e-4
+    router_top_k:
+      type: categorical
+      choices: [1, 2]
+hardware:
+  accelerator: gpu
+  precision: bf16
+  devices: 1

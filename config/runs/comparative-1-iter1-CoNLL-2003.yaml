@@ -1,0 +1,58 @@
+run_id: comparative-1-iter1-CoNLL-2003
+method: comparative-1
+model:
+  host_model_name: distilbert-base-uncased
+  hidden_size: 768
+  num_layers: 6
+adapter:
+  name: SAT-LoRA
+  lora_rank: 8
+  lora_alpha: 16
+  target_modules: [q_proj, k_proj, v_proj, o_proj, ffn_down, ffn_up]
+  share_across_layers: false
+  precision: int8
+dataset:
+  name: conll2003
+  hf_id: eriktks/conll2003
+  splits:
+    train: train
+    validation: validation
+    test: test
+  max_length: 128
+training:
+  optimizer: adamw
+  learning_rate: 3.0e-4
+  batch_size: 32
+  max_steps: 3000
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1
+  lr_scheduler: linear
+  warmup_steps: 300
+  seed: 42
+  update_param_groups:
+    - adapter.lora
+evaluation:
+  eval_steps: 200
+  metric: seqeval
+budget_constraints:
+  max_extra_params_mb: 32
+  max_flop_overhead_pct: 10
+optuna:
+  n_trials: 25
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1.0e-5
+      high: 1.0e-3
+    lora_rank:
+      type: int
+      low: 4
+      high: 16
+    batch_size:
+      type: categorical
+      choices: [16, 32, 64]
+hardware:
+  accelerator: gpu
+  precision: bf16
+  devices: 1

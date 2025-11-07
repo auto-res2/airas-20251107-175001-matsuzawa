@@ -1,0 +1,41 @@
+defaults:
+  - runs/${run}
+  - _self_
+
+# Required CLI args -----------------------------------------------------------
+run: "???"           # run group identifier, e.g., proposed-iter1-CoNLL-2003
+mode: full           # full | trial
+results_dir: outputs
+
+# WANDB ----------------------------------------------------------------------
+wandb:
+  entity: gengaru617-personal
+  project: 251106-test
+  mode: online  # auto-switched to 'disabled' in trial mode
+
+# Optuna ---------------------------------------------------------------------
+optuna:
+  n_trials: 0
+  direction: maximize
+  search_space: {}
+
+# Training defaults ----------------------------------------------------------
+training:
+  seed: 42
+  batch_size: 32
+  epochs: 3
+  max_steps: 1000
+  learning_rate: 5e-5
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1
+
+evaluation:
+  metric: accuracy  # can be overwritten by run cfg
+  eval_steps: 50
+
+# Fields populated by run YAML ----------------------------------------------
+method: ""
+model: {}
+adapter: {}
+dataset: {}
+budget_constraints: {}
