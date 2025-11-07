@@ -1,5 +1,6 @@
 # Required CLI args -----------------------------------------------------------
 run: ???           # run group identifier, e.g., proposed-iter1-CoNLL-2003
+run_id: ???        # run identifier (typically same as run, can be overridden in run config)
 mode: full           # full | trial
 results_dir: outputs
 
@@ -35,3 +36,4 @@ model: {}
 adapter: {}
 dataset: {}
 budget_constraints: {}
+hardware: {}
