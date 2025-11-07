@@ -74,3 +74,63 @@ You should probably TRAIN this model on a down-stream task to be able to use it 
 You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
 [2025-11-07 19:32:11,230][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
 You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+=== [UV SYNC] Start at Fri Nov  7 19:34:53 UTC 2025 ===
+=== [UV SYNC] Finished successfully at Fri Nov  7 19:35:01 UTC 2025 ===
+=== [FULL EXPERIMENT] Start for comparative-1-iter1-CoNLL-2003 at Fri Nov  7 19:35:01 UTC 2025 ===
+🚀 Launching: /mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-iter1-CoNLL-2003 results_dir=.research/iteration1 mode=full
+[2025-11-08 04:36:04,843][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:36:23,442][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:36:39,981][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:36:56,392][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:37:12,542][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:37:29,072][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:37:32,619][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:37:36,106][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:37:42,619][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:37:45,897][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:37:49,184][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:37:52,468][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:37:55,942][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:38:09,473][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:38:12,982][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:38:19,706][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:38:23,188][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:38:33,413][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:38:36,969][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:38:40,468][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:38:56,954][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:39:00,486][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:39:10,332][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:39:13,947][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[2025-11-08 04:39:17,497][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Optuna best trial 4: value=0.9061 params={'training.learning_rate': 0.00016650810091857352, 'adapter.lora_rank': 9, 'training.batch_size': 32}
+[2025-11-08 04:39:24,663][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+wandb URL: https://wandb.ai/gengaru617-personal/251106-test/runs/comparative-1-iter1-CoNLL-2003
+Final metrics: {'f1': np.float64(0.9501505308192048), 'accuracy': 0.9872473813325027}
+=== [FULL EXPERIMENT] PASSED for comparative-1-iter1-CoNLL-2003 at Fri Nov  7 19:42:16 UTC 2025 ===

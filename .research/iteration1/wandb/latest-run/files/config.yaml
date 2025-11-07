@@ -1,0 +1,196 @@
+_wandb:
+    value:
+        cli_version: 0.22.3
+        e:
+            1uc89zwtcaxpiytcfut1moszmjg2xg9d:
+                args:
+                    - run=comparative-1-iter1-CoNLL-2003
+                    - results_dir=.research/iteration1
+                    - mode=full
+                cpu_count: 112
+                cpu_count_logical: 224
+                cudaVersion: "12.8"
+                disk:
+                    /:
+                        total: "1888104628224"
+                        used: "46357901312"
+                email: gengaru617science@gmail.com
+                executable: /mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/bin/python3
+                git:
+                    commit: efbcfa2b00e20f9c38078b92e4281a38e6f30c44
+                    remote: https://github.com/auto-res2/airas-20251107-175001-matsuzawa
+                gpu: NVIDIA H200
+                gpu_count: 8
+                gpu_nvidia:
+                    - architecture: Hopper
+                      cudaCores: 16896
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H200
+                      uuid: GPU-7de92a11-427a-bfc5-89b7-1de73b4b9562
+                    - architecture: Hopper
+                      cudaCores: 16896
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H200
+                      uuid: GPU-34ff3f30-0e10-3a52-ae0f-17831682b660
+                    - architecture: Hopper
+                      cudaCores: 16896
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H200
+                      uuid: GPU-e36fa818-ebd1-a578-eaac-a22f30e1589f
+                    - architecture: Hopper
+                      cudaCores: 16896
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H200
+                      uuid: GPU-0a129d69-bb8a-4194-0c7e-8277aa901286
+                    - architecture: Hopper
+                      cudaCores: 16896
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H200
+                      uuid: GPU-fad5bd74-7b73-c04a-a54d-ade260d48057
+                    - architecture: Hopper
+                      cudaCores: 16896
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H200
+                      uuid: GPU-705b2491-fe2b-c6c7-efe3-30ecc8c2d31a
+                    - architecture: Hopper
+                      cudaCores: 16896
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H200
+                      uuid: GPU-11a853d7-a27b-f48f-2dfd-2963b2685df8
+                    - architecture: Hopper
+                      cudaCores: 16896
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H200
+                      uuid: GPU-e3c7310a-f340-743d-c2c5-88478c319cb6
+                host: KRK-039
+                memory:
+                    total: "2163949613056"
+                os: Linux-6.8.0-78-generic-x86_64-with-glibc2.39
+                program: -m src.train
+                python: CPython 3.11.14
+                root: /mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.research/iteration1
+                startedAt: "2025-11-07T19:39:25.155151Z"
+                writerId: 1uc89zwtcaxpiytcfut1moszmjg2xg9d
+        m: []
+        python_version: 3.11.14
+        t:
+            "1":
+                - 1
+                - 5
+                - 11
+                - 35
+                - 49
+                - 50
+                - 51
+                - 53
+                - 100
+            "2":
+                - 1
+                - 5
+                - 11
+                - 35
+                - 49
+                - 50
+                - 51
+                - 53
+                - 100
+            "3":
+                - 2
+                - 14
+                - 16
+                - 61
+                - 62
+            "4": 3.11.14
+            "5": 0.22.3
+            "6": 4.57.1
+            "12": 0.22.3
+            "13": linux-x86_64
+adapter:
+    value:
+        lora_alpha: 16
+        lora_rank: 9
+        name: SAT-LoRA
+        precision: int8
+        share_across_layers: false
+        target_modules:
+            - q_proj
+            - k_proj
+            - v_proj
+            - o_proj
+            - ffn_down
+            - ffn_up
+budget_constraints:
+    value:
+        max_extra_params_mb: 32
+        max_flop_overhead_pct: 10
+dataset:
+    value:
+        hf_id: lhoestq/conll2003
+        max_length: 128
+        name: conll2003
+        splits:
+            test: test
+            train: train
+            validation: validation
+evaluation:
+    value:
+        eval_steps: 200
+        metric: seqeval
+hardware:
+    value:
+        accelerator: gpu
+        devices: 1
+        precision: bf16
+method:
+    value: comparative-1
+mode:
+    value: full
+model:
+    value:
+        hidden_size: 768
+        host_model_name: distilbert-base-uncased
+        num_layers: 6
+optuna:
+    value:
+        direction: maximize
+        n_trials: 25
+        search_space:
+            adapter.lora_rank:
+                high: 16
+                low: 4
+                type: int
+            training.batch_size:
+                choices:
+                    - 16
+                    - 32
+                    - 64
+                type: categorical
+            training.learning_rate:
+                high: 0.001
+                low: 1e-05
+                type: loguniform
+results_dir:
+    value: /mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.research/iteration1
+run:
+    value: comparative-1-iter1-CoNLL-2003
+run_id:
+    value: comparative-1-iter1-CoNLL-2003
+training:
+    value:
+        batch_size: 32
+        epochs: 3
+        gradient_accumulation_steps: 1
+        learning_rate: 0.00016650810091857352
+        lr_scheduler: linear
+        max_steps: 3000
+        optimizer: adamw
+        seed: 42
+        update_param_groups:
+            - adapter.lora
+        warmup_steps: 300
+        weight_decay: 0.01
+wandb:
+    value:
+        entity: gengaru617-personal
+        mode: online
+        project: 251106-test
