@@ -1,0 +1,164 @@
+_wandb:
+    value:
+        cli_version: 0.22.3
+        e:
+            jd6mzp2n9hy0sv4vvixq7xt8phfulpk3:
+                args:
+                    - run=proposed-iter1-CoNLL-2003
+                    - results_dir=.research/iteration1
+                    - mode=full
+                cpu_count: 12
+                cpu_count_logical: 24
+                cudaVersion: "12.2"
+                disk:
+                    /:
+                        total: "982240026624"
+                        used: "455593480192"
+                email: gengaru617science@gmail.com
+                executable: /home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/bin/python3
+                git:
+                    commit: 6e436a5763b7352e54050f71895345709eea2c24
+                    remote: https://github.com/auto-res2/airas-20251107-175001-matsuzawa
+                gpu: NVIDIA A100 80GB PCIe
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A100 80GB PCIe
+                      uuid: GPU-0ab159bb-2a1f-52fa-dfb1-9e864ac57142
+                host: pt80-1-a-29
+                memory:
+                    total: "269849636864"
+                os: Linux-5.15.0-119-generic-x86_64-with-glibc2.35
+                program: -m src.train
+                python: CPython 3.11.13
+                root: /home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.research/iteration1
+                startedAt: "2025-11-07T19:41:11.505249Z"
+                writerId: jd6mzp2n9hy0sv4vvixq7xt8phfulpk3
+        m: []
+        python_version: 3.11.13
+        t:
+            "1":
+                - 1
+                - 5
+                - 11
+                - 35
+                - 49
+                - 50
+                - 51
+                - 53
+                - 100
+            "2":
+                - 1
+                - 5
+                - 11
+                - 35
+                - 49
+                - 50
+                - 51
+                - 53
+                - 100
+            "3":
+                - 2
+                - 14
+                - 16
+                - 61
+                - 62
+            "4": 3.11.13
+            "5": 0.22.3
+            "6": 4.57.1
+            "12": 0.22.3
+            "13": linux-x86_64
+adapter:
+    value:
+        anchor_dim: 256
+        atoms: 128
+        bias_bits: 4
+        freeze_base_adapter: true
+        lambda_F: 0.088301583692537
+        lambda_Q: 3.187974934174355e-05
+        name: UniHyperLoRA
+        quant_bits: 4
+        router_top_k: 2
+        train_bias_delta_only: true
+budget_constraints:
+    value:
+        max_extra_params_mb: 1
+        max_flop_overhead_pct: 10
+dataset:
+    value:
+        hf_id: lhoestq/conll2003
+        max_length: 128
+        name: conll2003
+        splits:
+            test: test
+            train: train
+            validation: validation
+evaluation:
+    value:
+        eval_steps: 100
+        metric: seqeval
+hardware:
+    value:
+        accelerator: gpu
+        devices: 1
+        precision: bf16
+method:
+    value: proposed
+mode:
+    value: full
+model:
+    value:
+        hidden_size: 768
+        host_model_name: distilbert-base-uncased
+        max_position_embeddings: 512
+        num_layers: 6
+        vocab_size: 30522
+optuna:
+    value:
+        direction: maximize
+        n_trials: 25
+        search_space:
+            adapter.lambda_F:
+                high: 0.1
+                low: 0.01
+                type: uniform
+            adapter.lambda_Q:
+                high: 0.0001
+                low: 1e-06
+                type: loguniform
+            adapter.router_top_k:
+                choices:
+                    - 1
+                    - 2
+                type: categorical
+            training.learning_rate:
+                high: 0.0005
+                low: 1e-05
+                type: loguniform
+results_dir:
+    value: /home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.research/iteration1
+run:
+    value: proposed-iter1-CoNLL-2003
+run_id:
+    value: proposed-iter1-CoNLL-2003
+training:
+    value:
+        batch_size: 32
+        epochs: 3
+        gradient_accumulation_steps: 1
+        learning_rate: 0.00018716843924922904
+        lr_scheduler: linear
+        max_steps: 500
+        optimizer: adamw
+        seed: 42
+        update_param_groups:
+            - adapter.bias_delta
+        warmup_steps: 50
+        weight_decay: 0
+wandb:
+    value:
+        entity: gengaru617-personal
+        mode: online
+        project: 251106-test

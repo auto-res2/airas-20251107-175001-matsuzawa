@@ -1,0 +1,1 @@
+{"_runtime":100.213661665,"lr":0,"gpu_mem_mb":273.86962890625,"eval_accuracy":0.32426696779720415,"step":500,"_step":500,"train_loss":NaN,"grad_norm":NaN,"final_accuracy":0.32426696779720415,"_wandb":{"runtime":100},"_timestamp":1.7625445635390656e+09,"eval_f1":0.0046902053608608935,"final_f1":0.0046902053608608935,"adapter_param_MB":91.43798828125}
