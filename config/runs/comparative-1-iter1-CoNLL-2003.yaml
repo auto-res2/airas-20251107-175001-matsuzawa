@@ -41,15 +41,15 @@ optuna:
   n_trials: 25
   direction: maximize
   search_space:
-    learning_rate:
+    training.learning_rate:
       type: loguniform
       low: 1.0e-5
       high: 1.0e-3
-    lora_rank:
+    adapter.lora_rank:
       type: int
       low: 4
       high: 16
-    batch_size:
+    training.batch_size:
       type: categorical
       choices: [16, 32, 64]
 hardware:

@@ -285,8 +285,11 @@ def main(cfg: DictConfig):
             ),
             n_trials=int(cfg.optuna.n_trials),
         )
+        # Disable struct mode to allow updating with Optuna best params
+        OmegaConf.set_struct(cfg, False)
         for k, v in study.best_trial.params.items():
             OmegaConf.update(cfg, k, v, merge=True)
+        OmegaConf.set_struct(cfg, True)
         print(
             f"Optuna best trial {study.best_trial.number}: value={study.best_value:.4f} params={study.best_trial.params}"
         )

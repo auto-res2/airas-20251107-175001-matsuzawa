@@ -432,3 +432,229 @@ Traceback (most recent call last):
 subprocess.CalledProcessError: Command '['/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/bin/python3', '-u', '-m', 'src.train', 'run=comparative-1-iter1-CoNLL-2003', 'results_dir=.research/iteration1', 'mode=full']' returned non-zero exit status 1.
 
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Using CPython 3.11.13
+Creating virtual environment at: .venv
+Resolved 108 packages in 104ms
+Installed 99 packages in 5.63s
+ + aiohappyeyeballs==2.6.1
+ + aiohttp==3.13.2
+ + aiosignal==1.4.0
+ + alembic==1.17.1
+ + annotated-types==0.7.0
+ + antlr4-python3-runtime==4.9.3
+ + anyio==4.11.0
+ + attrs==25.4.0
+ + certifi==2025.10.5
+ + charset-normalizer==3.4.4
+ + click==8.3.0
+ + colorlog==6.10.1
+ + contourpy==1.3.3
+ + cycler==0.12.1
+ + datasets==4.4.1
+ + dill==0.4.0
+ + evaluate==0.4.6
+ + filelock==3.20.0
+ + fonttools==4.60.1
+ + frozenlist==1.8.0
+ + fsspec==2025.10.0
+ + gitdb==4.0.12
+ + gitpython==3.1.45
+ + greenlet==3.2.4
+ + h11==0.16.0
+ + hf-xet==1.2.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + huggingface-hub==0.36.0
+ + hydra-core==1.3.2
+ + idna==3.11
+ + jinja2==3.1.6
+ + joblib==1.5.2
+ + kiwisolver==1.4.9
+ + mako==1.3.10
+ + markupsafe==3.0.3
+ + matplotlib==3.10.7
+ + mpmath==1.3.0
+ + multidict==6.7.0
+ + multiprocess==0.70.18
+ + networkx==3.5
+ + numpy==2.3.4
+ + nvidia-cublas-cu12==12.8.4.1
+ + nvidia-cuda-cupti-cu12==12.8.90
+ + nvidia-cuda-nvrtc-cu12==12.8.93
+ + nvidia-cuda-runtime-cu12==12.8.90
+ + nvidia-cudnn-cu12==9.10.2.21
+ + nvidia-cufft-cu12==11.3.3.83
+ + nvidia-cufile-cu12==1.13.1.3
+ + nvidia-curand-cu12==10.3.9.90
+ + nvidia-cusolver-cu12==11.7.3.90
+ + nvidia-cusparse-cu12==12.5.8.93
+ + nvidia-cusparselt-cu12==0.7.1
+ + nvidia-nccl-cu12==2.27.5
+ + nvidia-nvjitlink-cu12==12.8.93
+ + nvidia-nvshmem-cu12==3.3.20
+ + nvidia-nvtx-cu12==12.8.90
+ + omegaconf==2.3.0
+ + optuna==4.5.0
+ + packaging==25.0
+ + pandas==2.3.3
+ + pillow==12.0.0
+ + platformdirs==4.5.0
+ + propcache==0.4.1
+ + protobuf==6.33.0
+ + pyarrow==22.0.0
+ + pydantic==2.12.4
+ + pydantic-core==2.41.5
+ + pyparsing==3.2.5
+ + python-dateutil==2.9.0.post0
+ + pytz==2025.2
+ + pyyaml==6.0.3
+ + regex==2025.11.3
+ + requests==2.32.5
+ + safetensors==0.6.2
+ + scikit-learn==1.7.2
+ + scipy==1.16.3
+ + seaborn==0.13.2
+ + sentry-sdk==2.43.0
+ + seqeval==1.2.2
+ + six==1.17.0
+ + smmap==5.0.2
+ + sniffio==1.3.1
+ + sqlalchemy==2.0.44
+ + sympy==1.14.0
+ + threadpoolctl==3.6.0
+ + tokenizers==0.22.1
+ + torch==2.9.0
+ + tqdm==4.67.1
+ + transformers==4.57.1
+ + triton==3.5.0
+ + typing-extensions==4.15.0
+ + typing-inspection==0.4.2
+ + tzdata==2025.2
+ + unihyperlora-experiments==0.1.0 (from file:///home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa)
+ + urllib3==2.5.0
+ + wandb==0.22.3
+ + xxhash==3.6.0
+ + yarl==1.22.0
+Generating train split:   0%|          | 0/14041 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 14041/14041 [00:00<00:00, 267391.71 examples/s]
+Generating validation split:   0%|          | 0/3250 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 3250/3250 [00:00<00:00, 262988.60 examples/s]
+Generating test split:   0%|          | 0/3453 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 3453/3453 [00:00<00:00, 331417.20 examples/s]
+Map:   0%|          | 0/14041 [00:00<?, ? examples/s]Map:  28%|██▊       | 4000/14041 [00:00<00:00, 23257.24 examples/s]Map:  57%|█████▋    | 8000/14041 [00:00<00:00, 23995.17 examples/s]Map:  85%|████████▌ | 12000/14041 [00:00<00:00, 22841.39 examples/s]Map: 100%|██████████| 14041/14041 [00:00<00:00, 22065.86 examples/s]
+Map:   0%|          | 0/3250 [00:00<?, ? examples/s]Map:  62%|██████▏   | 2000/3250 [00:00<00:00, 18606.08 examples/s]Map: 100%|██████████| 3250/3250 [00:00<00:00, 7697.71 examples/s] 
+[I 2025-11-07 19:26:59,946] A new study created in memory with name: no-name-e94f52ce-fbf1-4636-b9b5-f46096918e2d
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py:193: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler() if device.type == "cuda" else None
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py:138: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast():
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_0 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_3 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_5 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_7 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_8 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_1 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_2 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_6 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_4 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/v1.py:57: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+[I 2025-11-07 19:27:25,968] Trial 0 finished with value: 0.885847945772205 and parameters: {'learning_rate': 2.1606877353075694e-05, 'lora_rank': 5, 'batch_size': 32}. Best is trial 0 with value: 0.885847945772205.
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:27:46,667] Trial 1 finished with value: 0.9048288196218702 and parameters: {'learning_rate': 0.000967894722314015, 'lora_rank': 15, 'batch_size': 32}. Best is trial 1 with value: 0.9048288196218702.
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:28:07,487] Trial 2 finished with value: 0.877121347454383 and parameters: {'learning_rate': 0.0003609698723361945, 'lora_rank': 5, 'batch_size': 64}. Best is trial 1 with value: 0.9048288196218702.
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:28:28,100] Trial 3 finished with value: 0.8973719547285631 and parameters: {'learning_rate': 6.557833574608277e-05, 'lora_rank': 5, 'batch_size': 16}. Best is trial 1 with value: 0.9048288196218702.
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:28:48,912] Trial 4 finished with value: 0.8344091438647313 and parameters: {'learning_rate': 3.1292849542847255e-05, 'lora_rank': 12, 'batch_size': 32}. Best is trial 1 with value: 0.9048288196218702.
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:28:57,317] Trial 5 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:29:01,721] Trial 6 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:29:18,557] Trial 7 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:29:22,920] Trial 8 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:29:39,399] Trial 9 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:29:48,022] Trial 10 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:30:00,523] Trial 11 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:30:09,000] Trial 12 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:30:13,650] Trial 13 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:30:26,154] Trial 14 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:30:46,847] Trial 15 finished with value: 0.8898455305140542 and parameters: {'learning_rate': 0.0002464048953856699, 'lora_rank': 8, 'batch_size': 32}. Best is trial 1 with value: 0.9048288196218702.
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:30:59,322] Trial 16 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:31:07,720] Trial 17 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:31:12,106] Trial 18 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:31:16,458] Trial 19 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:31:25,162] Trial 20 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:31:45,983] Trial 21 finished with value: 0.893622416634969 and parameters: {'learning_rate': 0.00019664947682632055, 'lora_rank': 6, 'batch_size': 32}. Best is trial 1 with value: 0.9048288196218702.
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:31:50,380] Trial 22 pruned. 
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:32:10,985] Trial 23 finished with value: 0.9000610363326801 and parameters: {'learning_rate': 4.79358341167532e-05, 'lora_rank': 4, 'batch_size': 32}. Best is trial 1 with value: 0.9048288196218702.
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[I 2025-11-07 19:32:28,116] Trial 24 pruned. 
+Error executing job with overrides: ['run=comparative-1-iter1-CoNLL-2003', 'results_dir=.research/iteration1', 'mode=full']
+Traceback (most recent call last):
+  File "/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py", line 289, in main
+    OmegaConf.update(cfg, k, v, merge=True)
+omegaconf.errors.ConfigAttributeError: Key 'learning_rate' is not in struct
+    full_key: learning_rate
+    object_type=dict
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Error executing job with overrides: ['run=comparative-1-iter1-CoNLL-2003', 'results_dir=.research/iteration1', 'mode=full']
+Traceback (most recent call last):
+  File "/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/main.py", line 38, in main
+    subprocess.run(cmd, check=True, env=env)
+  File "/home/toma/.local/share/uv/python/cpython-3.11.13-linux-x86_64-gnu/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/bin/python3', '-u', '-m', 'src.train', 'run=comparative-1-iter1-CoNLL-2003', 'results_dir=.research/iteration1', 'mode=full']' returned non-zero exit status 1.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
