@@ -715,6 +715,11 @@
       "expected_result": "1) Zero-shot: without any extra tuning UniHyperLoRA transfers to BERT-large with <1 % accuracy loss vs source model. 2) After 500 update steps on each task, UniHyperLoRA matches SAT-LoRA that was *retrained* for that architecture while using 97 % less additional memory (0.97 MB vs 33 MB) and identical FLOPs. 3) On TinyBERT the projector correctly shrinks atoms; accuracy +1.1 % over plain LoRA under the same budget.",
       "expected_conclusion": "A single tiny hyper-network that conditions on layer *dimensions* as well as depth and type lets one global LoRA dictionary adapt *any* Transformer family without retraining architecture-specific mixers.  UniHyperLoRA therefore turns adapter weights into true reusable assets—enabling community-shared, phone-sized PEFT libraries and dramatically lowering the entry barrier for fine-tuning ever-evolving language models."
     },
-    "iterations": []
+    "iterations": [
+      {
+        "iteration_id": 1,
+        "method": "Universal Hyper‐LoRA (UniHyperLoRA)  1. Canonical atom dictionary  U∈ℝ^{M×d₀}, V∈ℝ^{M×d₀} with small anchor dimension d₀=256 (8-bit, M=128). 2. Dimension-aware projectors  For a target weight of shape (d_out , d_in) we compute two thin, *factored* projectors:   P_out(d_out)∈ℝ^{d_out×d₀},  P_in(d_in)∈ℝ^{d₀×d_in}.  They are produced by a shared hyper-MLP h_ψ(size) that takes the log-scaled dimension as input (≈4 kB total). 3. Continuous mixer  g_θ(depth_norm, type_id)→ℝ^M (two-layer sine-activated MLP, 2 k params) outputs real‐valued mixing weights that are quantised to 4-bit at save-time. 4. Token- & task-conditional sparse router r_φ(h_{ℓ,i}, E(task))→Top-k(M) (k≤2) chooses active atoms. 5. Low-rank update  ΔW_{ℓ,i}=∑_{j=1}^k g_top(j)·P_out u_j v_jᵀ P_in.  All matrix multiplications are fused with the base forward pass. 6. Zero-shot portability  When UniHyperLoRA is first trained on a *source* model (e.g. BERT-base), only U,V,θ,ψ,φ are updated.  To adapt a *new* target model with unseen shapes we **freeze** U,V,ψ,φ and fine-tune a 4-bit bias δθ (≈0.5 kB) per task; no architecture-specific retraining. 7. Budget loss  L_task+λ_F·E[k]+λ_Q·‖δθ‖² keeps FLOPs and extra params bounded."
+      }
+    ]
   }
 }
