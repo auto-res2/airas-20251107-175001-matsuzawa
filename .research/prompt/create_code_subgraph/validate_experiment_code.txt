@@ -1,0 +1,331 @@
+
+LLM Name: o3-2025-04-16
+Input:
+You are an AI code reviewer validating production-ready experiment code for research papers.
+
+Analyze the provided experiment code and determine if it meets all requirements for immediate execution in research experiments.
+
+# Instructions
+
+## Core Validation Criteria
+Check if the generated experiment code meets ALL of the following requirements:
+
+1. **Complete Implementation**:
+   - Every component is fully functional, production-ready, publication-worthy code
+   - No "omitted for brevity", no "simplified version", no TODO, PLACEHOLDER, pass, or ...
+   - All functions and classes are completely implemented
+   - No truncated code sections or incomplete implementations
+
+2. **Hydra Integration**:
+   - Uses Hydra to manage all experiment configurations from `config/runs/*.yaml` files
+   - All parameters are loaded from run configs dynamically
+   - Proper configuration structure with run_id, method, model, dataset, training, and optuna sections
+   - CLI interface matches:
+     * Training (full): `uv run python -u -m src.main run={run_id} results_dir={path} mode=full`
+     * Training (trial): `uv run python -u -m src.main run={run_id} results_dir={path} mode=trial`
+     * Evaluation: `uv run python -m src.evaluate results_dir={path} run_ids='["run-1", "run-2", ...]'` (independent execution)
+   - Code must automatically configure based on mode:
+     * When `cfg.mode == "trial"`: Set `cfg.wandb.mode = "disabled"`, `cfg.optuna.n_trials = 0`, epochs=1
+     * When `cfg.mode == "full"`: Set `cfg.wandb.mode = "online"` and use full configuration
+
+3. **Complete Data Pipeline**:
+   - Full data loading and preprocessing implementation
+   - Dataset-specific preprocessing is properly implemented
+   - No placeholder dataset loading code
+   - Proper error handling for data operations
+   - Uses `.cache/` as the cache directory for all datasets and models
+
+4. **Model Implementation**:
+   - Complete model architectures for all methods (proposed and comparative methods)
+   - No placeholders (TODO, PLACEHOLDER, pass, or incomplete implementations)
+   - When External Resources specify HuggingFace models: properly use and customize them (acceptable to wrap AutoModel, add adapters, etc.)
+   - When no external models specified: implement architectures from scratch using PyTorch primitives
+   - Model-specific configurations correctly applied
+   - Proper PyTorch usage throughout
+
+5. **File Structure Compliance**:
+   - Contains EXACTLY these required files (and NO other files):
+     * `src/train.py`
+     * `src/evaluate.py`
+     * `src/preprocess.py`
+     * `src/model.py`
+     * `src/main.py`
+     * `pyproject.toml`
+     * `config/config.yaml`
+   - NO additional files (e.g., NO `src/__init__.py`, NO `setup.py`, NO other Python files)
+   - No missing files from the structure
+   - All functionality contained within specified files
+
+6. **WandB Integration**:
+   - train.py initializes WandB and logs ALL metrics comprehensively:
+     * Use `wandb.log()` at each training step/batch/epoch with ALL relevant time-series metrics
+     * Log as frequently as possible (per-batch or per-epoch) to capture complete training dynamics
+     * Use `wandb.summary["key"] = value` to save final/best metrics (best_val_acc, final_test_acc, best_epoch, etc.)
+     * Metric names in train.py's wandb.log() MUST exactly match the keys used in evaluate.py's run.history()
+   - Optuna Integration: If using Optuna, DO NOT log intermediate trial results to WandB - only log the final run with best hyperparameters
+   - Code must automatically configure based on mode:
+     * When `cfg.mode == "trial"`: Set `cfg.wandb.mode = "disabled"` before any WandB operations
+     * When `cfg.mode == "full"`: Set `cfg.wandb.mode = "online"` before any WandB operations
+   - NO results.json or stdout JSON dumps in train.py
+   - config/config.yaml contains mandatory WandB settings (entity/project)
+   - `WANDB_API_KEY` environment variable is available for authentication
+
+7. **Configuration Files**:
+   - The generated code properly references config files via Hydra
+   - NOTE: config/runs/{run_id}.yaml files are provided separately (not in ExperimentCode)
+   - All run configurations match the experiment_runs provided
+   - Optuna search spaces are properly defined if applicable
+
+8. **Evaluation Script Independence**:
+   - evaluate.py is executed independently via `uv run python -m src.evaluate results_dir={path} run_ids='["run-1", "run-2"]'`
+   - Accepts `run_ids` parameter as JSON string list (parse with `json.loads(args.run_ids)`)
+   - main.py DOES NOT call evaluate.py
+   - evaluate.py loads WandB config from `config/config.yaml` (in repository root)
+   - evaluate.py retrieves comprehensive data from WandB API:
+     * Use `wandb.Api()` to get run data: `run = api.run(f"{entity}/{project}/{run_id}")`
+     * Retrieve: `history = run.history()`, `summary = run.summary._json_dict`, `config = dict(run.config)`
+   - **STEP 1: Per-Run Processing** (for each run_id):
+     * Export comprehensive run-specific metrics to: `{results_dir}/{run_id}/metrics.json`
+     * Generate run-specific figures (learning curves, confusion matrices) to: `{results_dir}/{run_id}/`
+     * Each run should have its own subdirectory with its metrics and figures
+   - **STEP 2: Aggregated Analysis** (after processing all runs):
+     * Export aggregated metrics to: `{results_dir}/comparison/aggregated_metrics.json` with the following structure:
+       ```json
+       {
+         "primary_metric": "Target-model dev score under 1 MB / 10 %-FLOP budget (report zero-shot and post-tune).",
+         "metrics": {
+           "metric_name_1": {"run_id_1": value1, "run_id_2": value2, ...},
+           "metric_name_2": {"run_id_1": value1, "run_id_2": value2, ...}
+         },
+         "best_proposed": {
+           "run_id": "proposed-iter2-model-dataset",
+           "value": 0.92
+         },
+         "best_baseline": {
+           "run_id": "comparative-1-model-dataset",
+           "value": 0.88
+         },
+         "gap": 4.55
+       }
+       ```
+       The structure must include:
+       - "primary_metric": The primary evaluation metric name from the hypothesis
+       - "metrics": All collected metrics organized by metric name, then by run_id
+       - "best_proposed": The run_id and value of the proposed method with the best primary_metric performance (run_id contains "proposed")
+       - "best_baseline": The run_id and value of the baseline/comparative method with the best primary_metric performance (run_id contains "comparative" or "baseline")
+       - "gap": Performance gap calculated as: (best_proposed.value - best_baseline.value) / best_baseline.value * 100
+         * Must use the expected results from the hypothesis to determine metric direction (higher vs lower is better)
+         * If the metric should be minimized, reverse the sign of the gap
+         * The gap represents the percentage improvement of the proposed method over the best baseline
+     * Generate comparison figures to: `{results_dir}/comparison/`
+     * Cross-run comparison charts (bar charts, box plots)
+     * Performance metrics tables
+     * Statistical significance tests
+   - Proper figure quality: legends, annotations, tight_layout
+   - Follows GLOBALLY UNIQUE naming convention to prevent collisions:
+     * Per-run figures: `{run_id}_{figure_topic}[_<condition>][_pairN].pdf` (e.g., `run-1-proposed-bert-glue_learning_curve.pdf`)
+     * Comparison figures: `comparison_{figure_topic}[_<condition>][_pairN].pdf` (e.g., `comparison_accuracy_bar_chart.pdf`)
+   - train.py and main.py generate NO figures
+   - evaluate.py cannot run in trial_mode (no WandB data available when WandB disabled)
+
+9. **Mode-Based Implementation**:
+   - `mode` parameter controls experiment behavior (required parameter)
+   - When `cfg.mode == "trial"`:
+     * Properly reduces computational load: epochs=1, batches limited to 1-2, Optuna disabled (n_trials=0), small evaluation subset
+     * Automatically sets `cfg.wandb.mode = "disabled"`
+     * Purpose: Fast validation that code runs without errors
+   - When `cfg.mode == "full"`:
+     * Automatically sets `cfg.wandb.mode = "online"`
+     * Uses full configuration (full epochs, full Optuna trials, etc.)
+
+## Output Format
+Respond with a JSON object containing:
+- `is_code_ready`: boolean - true if ALL criteria are met, false otherwise
+- `code_issue`: string - specific issues found if any criteria are not met, focusing on what needs to be fixed
+
+# Hypothesis
+open_problems='Existing cross-layer LoRA sharing schemes (SAT-LoRA, HF-SAT-LoRA) still presuppose a *fixed host model*: the functional mixer g_θ is learned **per architecture** and its output dimensionality is hard-wired to the in/out size of every weight matrix.  Hence the learned mixers cannot be reused across (i) different hidden sizes (e.g. BERT-base → DeBERTa-large), (ii) pruned or compressed variants, or (iii) future model versions that add more layers.  Practically this forces practitioners to retrain a new generator for each model, while societally it prevents community-shared, device-ready adapter libraries.  We lack a PEFT mechanism that 1) keeps the global atom dictionary *model-agnostic*, 2) generates layer-specific LoRA updates for *arbitrary* (d_in , d_out) on-the-fly, and 3) still fits into a sub-megabyte memory budget with per-token sparsity.' method='Universal Hyper‐LoRA (UniHyperLoRA)  1. Canonical atom dictionary  U∈ℝ^{M×d₀}, V∈ℝ^{M×d₀} with small anchor dimension d₀=256 (8-bit, M=128). 2. Dimension-aware projectors  For a target weight of shape (d_out , d_in) we compute two thin, *factored* projectors:   P_out(d_out)∈ℝ^{d_out×d₀},  P_in(d_in)∈ℝ^{d₀×d_in}.  They are produced by a shared hyper-MLP h_ψ(size) that takes the log-scaled dimension as input (≈4 kB total). 3. Continuous mixer  g_θ(depth_norm, type_id)→ℝ^M (two-layer sine-activated MLP, 2\u2009k params) outputs real‐valued mixing weights that are quantised to 4-bit at save-time. 4. Token- & task-conditional sparse router r_φ(h_{ℓ,i}, E(task))→Top-k(M) (k≤2) chooses active atoms. 5. Low-rank update  ΔW_{ℓ,i}=∑_{j=1}^k g_top(j)·P_out u_j v_jᵀ P_in.  All matrix multiplications are fused with the base forward pass. 6. Zero-shot portability  When UniHyperLoRA is first trained on a *source* model (e.g. BERT-base), only U,V,θ,ψ,φ are updated.  To adapt a *new* target model with unseen shapes we **freeze** U,V,ψ,φ and fine-tune a 4-bit bias δθ (≈0.5 kB) per task; no architecture-specific retraining. 7. Budget loss  L_task+λ_F·E[k]+λ_Q·‖δθ‖² keeps FLOPs and extra params bounded.' experimental_setup='Source pre-training  – BERT-base (L=12, d=768) on GLUE-SST-2 (3 epochs).  Target models  – DistilBERT-6L-d=768, BERT-large-24L-d=1024, and TinyBERT-4L-d=312.  Downstream tasks  – CoNLL-2003, BoolQ, Amazon-Review.  Baselines  – (a) SAT-LoRA retrained for every model, (b) standard 8-rank LoRA, (c) full fine-tune.  Budgets  – ≤1 MB total adapter weights, ≤10 % extra FLOPs.  Metrics  – dev F1 / accuracy, extra RAM, atoms · token, *zero-shot* performance before δθ tuning, and after 500 fine-tune steps.' primary_metric='Target-model dev score under 1 MB / 10 %-FLOP budget (report zero-shot and post-tune).' experimental_code="class DimProjector(nn.Module):\n    def __init__(self,d0=256):\n        super().__init__(); self.d0=d0; self.mlp=nn.Sequential(nn.Linear(1,64),nn.SiLU(),nn.Linear(64,d0*d0))\n    def forward(self,dim):                       # dim: int\n        w=self.mlp(torch.log10(torch.tensor([[dim]],dtype=torch.float32)))\n        return w.view(dim,self.d0)\n\nclass UniHyperLoRA(nn.Module):\n    def __init__(self,M=128,d0=256):\n        super().__init__(); self.u=nn.Parameter(torch.randn(M,d0)); self.v=nn.Parameter(torch.randn(M,d0))\n        self.mix=nn.Sequential(nn.Linear(6,128),nn.SiLU(),nn.Linear(128,M))   # depth+one-hot(5)\n        self.dim_proj=DimProjector(d0)\n    def forward(self,h,meta):                     # h:[B,T,H]\n        depth,kind,task=meta\n        g=self.mix(torch.cat([depth[:,None],kind],-1))          # [B,M]\n        mask=(g.topk(2).indices)                               # k=2\n        U_sel=self.u[mask]; V_sel=self.v[mask]\n        P_out=self.dim_proj(h.size(-1)); P_in=self.dim_proj(h.size(-1)).t()\n        delta=torch.einsum('bmk,kd->bmd',U_sel,P_out)           # simplified demo\n        # full std LoRA update skipped for brevity\n        return h+delta" expected_result='1) Zero-shot: without any extra tuning UniHyperLoRA transfers to BERT-large with <1 % accuracy loss vs source model. 2) After 500 update steps on each task, UniHyperLoRA matches SAT-LoRA that was *retrained* for that architecture while using 97 % less additional memory (0.97 MB vs 33 MB) and identical FLOPs. 3) On TinyBERT the projector correctly shrinks atoms; accuracy +1.1 % over plain LoRA under the same budget.' expected_conclusion='A single tiny hyper-network that conditions on layer *dimensions* as well as depth and type lets one global LoRA dictionary adapt *any* Transformer family without retraining architecture-specific mixers.  UniHyperLoRA therefore turns adapter weights into true reusable assets—enabling community-shared, phone-sized PEFT libraries and dramatically lowering the entry barrier for fine-tuning ever-evolving language models.'
+
+# Current Research Method
+Universal Hyper‐LoRA (UniHyperLoRA)  1. Canonical atom dictionary  U∈ℝ^{M×d₀}, V∈ℝ^{M×d₀} with small anchor dimension d₀=256 (8-bit, M=128). 2. Dimension-aware projectors  For a target weight of shape (d_out , d_in) we compute two thin, *factored* projectors:   P_out(d_out)∈ℝ^{d_out×d₀},  P_in(d_in)∈ℝ^{d₀×d_in}.  They are produced by a shared hyper-MLP h_ψ(size) that takes the log-scaled dimension as input (≈4 kB total). 3. Continuous mixer  g_θ(depth_norm, type_id)→ℝ^M (two-layer sine-activated MLP, 2 k params) outputs real‐valued mixing weights that are quantised to 4-bit at save-time. 4. Token- & task-conditional sparse router r_φ(h_{ℓ,i}, E(task))→Top-k(M) (k≤2) chooses active atoms. 5. Low-rank update  ΔW_{ℓ,i}=∑_{j=1}^k g_top(j)·P_out u_j v_jᵀ P_in.  All matrix multiplications are fused with the base forward pass. 6. Zero-shot portability  When UniHyperLoRA is first trained on a *source* model (e.g. BERT-base), only U,V,θ,ψ,φ are updated.  To adapt a *new* target model with unseen shapes we **freeze** U,V,ψ,φ and fine-tune a 4-bit bias δθ (≈0.5 kB) per task; no architecture-specific retraining. 7. Budget loss  L_task+λ_F·E[k]+λ_Q·‖δθ‖² keeps FLOPs and extra params bounded.
+
+# Experimental Design
+- Strategy: We first pre-train one universal UniHyperLoRA adapter on a single 12-layer BERT-base model with the SST-2 corpus.  This pre-training jointly learns (1) the canonical atom dictionary U,V, (2) the tiny continuous mixer g_θ, (3) the dimension-hyper-network h_ψ that predicts thin projectors P_in / P_out from log-scaled layer sizes, and (4) the sparse router r_φ that chooses at most k=2 atoms per token.  Only U,V,θ,ψ,φ are updated; the host model’s weights stay frozen.  After three epochs we freeze everything except a 4-bit bias δθ.
+
+For the transfer phase we load the *same* frozen adapter weights into three unseen target architectures (DistilBERT-6L-768, BERT-large-1024, TinyBERT-4L-312).  Because the projector h_ψ is dimension-aware, it instantly produces size-compatible low-rank updates for every (d_out,d_in) pair, so no re-training is needed (zero-shot evaluation).  We then run a short 500-step PEFT fine-tuning on each downstream task (CoNLL-2003 NER, BoolQ, Amazon-Review) updating only δθ.
+
+We compare against a strong baseline—SAT-LoRA—that must be re-learnt per architecture, as well as classical rank-8 LoRA and full fine-tuning, while enforcing the shared resource budget of ≤1 MB extra weights and ≤10 % extra FLOPs.  All experiments are executed on a single NVIDIA A100/H200 with 80 GB VRAM; the unified adapter occupies 0.97 MB in 4-bit form and adds <8 % theoretical FLOPs, satisfying the constraint.
+
+After training we report: (a) dev-set performance of the target model with the adapter inserted but *before* any task-specific updates (zero-shot portability) and (b) the score after 500 δθ optimisation steps.  We also log memory overhead, FLOP overhead, and average active atoms per token.  Results are expected to show that the single UniHyperLoRA file achieves near-lossless zero-shot transfer (≤1 % drop) and, after light tuning, matches or exceeds SAT-LoRA while using ~97 % less additional memory.
+- Proposed Method: Universal Hyper-LoRA (UniHyperLoRA) is a model-agnostic parameter-efficient fine-tuning mechanism that decouples the learned LoRA dictionary from the host architecture.
+1. Atom dictionary: Two 8-bit matrices U,V ∈ ℝ^{M×d₀} with M=128 atoms and anchor width d₀=256 hold the canonical bases that will be reused across *all* layers and models.
+2. Dimension-aware projectors: A shared two-layer MLP h_ψ takes log10(d_in) or log10(d_out) as a scalar input and outputs flattened weights for thin projectors P_in(d_in) ∈ ℝ^{d₀×d_in} and P_out(d_out) ∈ ℝ^{d_out×d₀}.  Because the mapping is continuous, it can generate projectors for unseen dimensions at inference time, enabling cross-size portability.
+3. Continuous mixer g_θ: Given the normalised depth of the layer (ℓ/L) and a one-hot encoding of the sub-module type (Q,K,V,O,FFN), a tiny sine-activated MLP (≈2 k parameters) produces real-valued mixing weights over the M atoms.  These weights are quantised to 4-bit when saved.
+4. Sparse router r_φ: A light router attends over the current hidden state h_{ℓ,i} concatenated with a learned task embedding and selects the Top-k (k≤2) atoms to activate, enforcing sparsity.
+5. Low-rank update: For every weight W_{ℓ,i} we form ΔW_{ℓ,i}= Σ_{j=1..k} g_top(j) · P_out u_j v_jᵀ P_in, and fuse it with the host forward pass.
+6. Zero-shot portability: After training on a source model we freeze U,V,ψ,φ and only fine-tune a 4-bit bias δθ per task, achieving <1 MB total adapter size.
+7. Budget regularisation: The loss L = L_task + λ_F·E[k] + λ_Q·‖δθ‖² penalises FLOPs and bias magnitude to respect the deployment budget.
+- Evaluation Metrics: ['Target-model dev score under 1 MB / 10 %-FLOP budget (report zero-shot and post-tune).', 'Memory overhead (MB)', 'FLOP overhead (%)', 'Active atoms per token', 'F1 Score', 'Accuracy']
+
+# Experiment Runs
+
+- Run ID: proposed-iter1-CoNLL-2003
+  Method: proposed
+  Model: None
+  Dataset: CoNLL-2003
+  
+  Config Content:
+  ```yaml
+  run_id: proposed-iter1-CoNLL-2003
+method: proposed
+model:
+  host_model_name: distilbert-base-uncased
+  hidden_size: 768
+  num_layers: 6
+  max_position_embeddings: 512
+  vocab_size: 30522
+adapter:
+  name: UniHyperLoRA
+  atoms: 128
+  anchor_dim: 256
+  router_top_k: 2
+  quant_bits: 4
+  freeze_base_adapter: true
+  train_bias_delta_only: true
+  bias_bits: 4
+  lambda_F: 0.05
+  lambda_Q: 1.0e-5
+dataset:
+  name: conll2003
+  hf_id: eriktks/conll2003
+  splits:
+    train: train
+    validation: validation
+    test: test
+  max_length: 128
+training:
+  optimizer: adamw
+  learning_rate: 2.0e-4
+  batch_size: 32
+  max_steps: 500
+  weight_decay: 0.0
+  gradient_accumulation_steps: 1
+  lr_scheduler: linear
+  warmup_steps: 50
+  seed: 42
+  update_param_groups:
+    - adapter.bias_delta
+evaluation:
+  eval_steps: 100
+  metric: seqeval
+budget_constraints:
+  max_extra_params_mb: 1.0
+  max_flop_overhead_pct: 10
+optuna:
+  n_trials: 25
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1.0e-5
+      high: 5.0e-4
+    lambda_F:
+      type: uniform
+      low: 0.01
+      high: 0.1
+    lambda_Q:
+      type: loguniform
+      low: 1.0e-6
+      high: 1.0e-4
+    router_top_k:
+      type: categorical
+      choices: [1, 2]
+hardware:
+  accelerator: gpu
+  precision: bf16
+  devices: 1
+
+  ```
+  
+
+- Run ID: comparative-1-iter1-CoNLL-2003
+  Method: comparative-1
+  Model: None
+  Dataset: CoNLL-2003
+  
+  Config Content:
+  ```yaml
+  run_id: comparative-1-iter1-CoNLL-2003
+method: comparative-1
+model:
+  host_model_name: distilbert-base-uncased
+  hidden_size: 768
+  num_layers: 6
+adapter:
+  name: SAT-LoRA
+  lora_rank: 8
+  lora_alpha: 16
+  target_modules: [q_proj, k_proj, v_proj, o_proj, ffn_down, ffn_up]
+  share_across_layers: false
+  precision: int8
+dataset:
+  name: conll2003
+  hf_id: eriktks/conll2003
+  splits:
+    train: train
+    validation: validation
+    test: test
+  max_length: 128
+training:
+  optimizer: adamw
+  learning_rate: 3.0e-4
+  batch_size: 32
+  max_steps: 3000
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1
+  lr_scheduler: linear
+  warmup_steps: 300
+  seed: 42
+  update_param_groups:
+    - adapter.lora
+evaluation:
+  eval_steps: 200
+  metric: seqeval
+budget_constraints:
+  max_extra_params_mb: 32
+  max_flop_overhead_pct: 10
+optuna:
+  n_trials: 25
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1.0e-5
+      high: 1.0e-3
+    lora_rank:
+      type: int
+      low: 4
+      high: 16
+    batch_size:
+      type: categorical
+      choices: [16, 32, 64]
+hardware:
+  accelerator: gpu
+  precision: bf16
+  devices: 1
+
+  ```
+  
+
+
+# Generated Experiment Code (To be validated)
+{"config_yaml": "defaults:\n  - _self_\n\n# Will be overridden via CLI (run=\u003crun_id\u003e)\nrun: \"\"\nmode: full\nresults_dir: outputs\n\nwandb:\n  entity: gengaru617-personal\n  project: 251106-test\n  mode: online  # will be changed to disabled automatically in trial mode\n\noptuna:\n  n_trials: 0  # default, may be overwritten by run config\n  direction: maximize", "evaluate_py": "import argparse\nimport json\nimport os\nfrom pathlib import Path\nfrom typing import List, Dict\n\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport pandas as pd\n\nimport wandb\nfrom omegaconf import OmegaConf\n\nCACHE_DIR = \".cache/\"\n\n\ndef parse_args():\n    parser = argparse.ArgumentParser(description=\"Aggregated evaluation over multiple WandB runs\")\n    parser.add_argument(\"results_dir\", type=str, help=\"Path to save outputs\")\n    parser.add_argument(\"run_ids\", type=str, help=\u0027JSON list of run_ids e.g. [\"run1\",\"run2\"]\u0027)\n    return parser.parse_args()\n\n\ndef load_wandb_base_config():\n    cfg_path = Path(__file__).resolve().parent.parent / \"config\" / \"config.yaml\"\n    cfg = OmegaConf.load(cfg_path)\n    return cfg.wandb.entity, cfg.wandb.project\n\n\ndef fetch_run_data(run_id: str, entity: str, project: str) -\u003e Dict:\n    api = wandb.Api()\n    run = api.run(f\"{entity}/{project}/{run_id}\")\n    history = run.history()  # pandas DataFrame\n    summary = dict(run.summary._json_dict)\n    config = dict(run.config)\n    return {\"history\": history, \"summary\": summary, \"config\": config}\n\n\ndef save_metrics(history: pd.DataFrame, summary: Dict, save_dir: Path):\n    metrics_path = save_dir / \"metrics.json\"\n    save_dir.mkdir(parents=True, exist_ok=True)\n    metrics = {\n        \"history\": history.to_dict(orient=\"list\"),\n        \"summary\": summary,\n    }\n    with open(metrics_path, \"w\") as fp:\n        json.dump(metrics, fp, indent=2)\n    print(f\"Saved metrics to {metrics_path}\")\n\n\ndef plot_learning_curve(history: pd.DataFrame, save_dir: Path, run_id: str):\n    figure_path = save_dir / f\"{run_id}_learning_curve.pdf\"\n    plt.figure()\n    if \"train_loss\" in history.columns:\n        sns.lineplot(x=history.index, y=history[\"train_loss\"], label=\"train_loss\")\n    eval_cols = [c for c in history.columns if c.startswith(\"eval_\")]\n    for col in eval_cols:\n        sns.lineplot(x=history.index, y=history[col], label=col)\n    plt.xlabel(\"step\")\n    plt.ylabel(\"metric\")\n    plt.title(\"Learning curves\")\n    plt.legend()\n    plt.tight_layout()\n    plt.savefig(figure_path)\n    plt.close()\n    print(f\"Saved figure {figure_path}\")\n\n\ndef aggregate_metrics(all_summaries: Dict[str, Dict], results_dir: Path):\n    comparison_dir = results_dir / \"comparison\"\n    comparison_dir.mkdir(parents=True, exist_ok=True)\n\n    primary_metric_name = (\n        \"Target-model dev score under 1 MB / 10 %-FLOP budget (report zero-shot and post-tune).\"\n    )\n\n    # collect metrics\n    metrics_map: Dict[str, Dict[str, float]] = {}\n    for run_id, summary in all_summaries.items():\n        for k, v in summary.items():\n            if isinstance(v, (int, float)):\n                metrics_map.setdefault(k, {})[run_id] = v\n\n    # Determine best proposed and baseline for primary metric (fall back keys)\n    primary_candidates = [\n        k\n        for k in [\n            \"final_f1\",\n            \"final_accuracy\",\n            \"eval_f1\",\n            \"eval_accuracy\",\n            \"f1\",\n            \"accuracy\",\n        ]\n        if k in metrics_map\n    ]\n    if not primary_candidates:\n        raise RuntimeError(\"No suitable primary metric found in summaries.\")\n    primary_key = primary_candidates[0]\n\n    proposed_runs = {k: v for k, v in metrics_map[primary_key].items() if \"proposed\" in k}\n    baseline_runs = {\n        k: v\n        for k, v in metrics_map[primary_key].items()\n        if any(x in k for x in [\"baseline\", \"comparative\"])\n    }\n    best_proposed_id = max(proposed_runs, key=proposed_runs.get)\n    best_baseline_id = max(baseline_runs, key=baseline_runs.get)\n\n    best_proposed_val = proposed_runs[best_proposed_id]\n    best_baseline_val = baseline_runs[best_baseline_id]\n\n    gap_pct = (best_proposed_val - best_baseline_val) / best_baseline_val * 100.0\n\n    aggregated = {\n        \"primary_metric\": primary_metric_name,\n        \"primary_metric_key\": primary_key,\n        \"metrics\": metrics_map,\n        \"best_proposed\": {\"run_id\": best_proposed_id, \"value\": best_proposed_val},\n        \"best_baseline\": {\"run_id\": best_baseline_id, \"value\": best_baseline_val},\n        \"gap\": gap_pct,\n    }\n\n    agg_path = comparison_dir / \"aggregated_metrics.json\"\n    with open(agg_path, \"w\") as fp:\n        json.dump(aggregated, fp, indent=2)\n    print(f\"Aggregated metrics saved to {agg_path}\")\n\n    # plot comparison bar chart for primary metric\n    bar_path = comparison_dir / \"comparison_primary_metric_bar_chart.pdf\"\n    plt.figure()\n    sns.barplot(\n        x=list(metrics_map[primary_key].keys()),\n        y=list(metrics_map[primary_key].values()),\n        palette=\"viridis\",\n    )\n    plt.xticks(rotation=45, ha=\"right\")\n    plt.ylabel(primary_key)\n    plt.tight_layout()\n    plt.savefig(bar_path)\n    plt.close()\n    print(f\"Saved comparison figure {bar_path}\")\n\n\nif __name__ == \"__main__\":\n    args = parse_args()\n    results_dir = Path(args.results_dir)\n    run_ids: List[str] = json.loads(args.run_ids)\n\n    entity, project = load_wandb_base_config()\n\n    summaries = {}\n\n    for run_id in run_ids:\n        data = fetch_run_data(run_id, entity, project)\n        run_dir = results_dir / run_id\n        save_metrics(data[\"history\"], data[\"summary\"], run_dir)\n        plot_learning_curve(data[\"history\"], run_dir, run_id)\n        summaries[run_id] = data[\"summary\"]\n\n    aggregate_metrics(summaries, results_dir)\n", "main_py": "import os\nimport subprocess\nimport sys\nfrom pathlib import Path\n\nimport hydra\nfrom omegaconf import DictConfig, OmegaConf\n\n\n@hydra.main(version_base=\"1.3\", config_path=\"../config\", config_name=\"config\")\ndef main(cfg: DictConfig):\n    if not cfg.run:\n        raise ValueError(\"CLI param run=\u003crun_id\u003e is required\")\n\n    # Compose overrides for subprocess\n    overrides = [\n        f\"run={cfg.run}\",\n        f\"results_dir={cfg.results_dir}\",\n        f\"mode={cfg.mode}\",\n    ]\n\n    cmd = [sys.executable, \"-u\", \"-m\", \"src.train\"] + overrides\n    print(\"Launching subprocess:\", \" \".join(cmd))\n    env = os.environ.copy()\n    subprocess.run(cmd, check=True, env=env)\n\n\nif __name__ == \"__main__\":\n    main()", "model_py": "import math\nfrom typing import List\n\nimport torch\nimport torch.nn.functional as F\nfrom torch import nn\nfrom transformers import (\n    AutoModelForTokenClassification,\n    AutoConfig,\n    DistilBertConfig,\n)\n\n__all__ = [\n    \"build_model_with_adapters\",\n    \"adapter_parameter_names\",\n    \"compute_adapter_params\",\n]\n\n\nclass LoRALinear(nn.Module):\n    \"\"\"Standard LoRA wrapper around a nn.Linear layer.\"\"\"\n\n    def __init__(self, base: nn.Linear, r: int = 8, alpha: int = 16, dropout: float = 0.0):\n        super().__init__()\n        self.base = base\n        self.r = r\n        if r \u003e 0:\n            self.lora_a = nn.Linear(base.in_features, r, bias=False)\n            self.lora_b = nn.Linear(r, base.out_features, bias=False)\n            # init\n            nn.init.kaiming_uniform_(self.lora_a.weight, a=math.sqrt(5))\n            nn.init.zeros_(self.lora_b.weight)\n            self.scaling = alpha / r\n            self.dropout = nn.Dropout(dropout)\n        else:\n            self.lora_a = None\n            self.lora_b = None\n            self.scaling = 1.0\n            self.dropout = nn.Identity()\n        # freeze base\n        for p in self.base.parameters():\n            p.requires_grad = False\n\n    def forward(self, x):\n        result = self.base(x)\n        if self.r \u003e 0:\n            lora_out = self.lora_b(self.lora_a(self.dropout(x))) * self.scaling\n            result += lora_out\n        return result\n\n\nclass DimAwareProjector(nn.Module):\n    \"\"\"h_\u03c8 : \u211d -\u003e \u211d^{d_out\u00d7d0} produce thin projector conditioned on dimension.\"\"\"\n\n    def __init__(self, d0=256):\n        super().__init__()\n        self.d0 = d0\n        self.mlp = nn.Sequential(\n            nn.Linear(1, 64),\n            nn.SiLU(),\n            nn.Linear(64, d0),\n        )\n\n    def forward(self, size: int):\n        inp = torch.log10(torch.tensor([[float(size)]], dtype=torch.float32, device=self.mlp[0].weight.device))\n        vec = self.mlp(inp).squeeze(0)  # shape: d0\n        # produce matrix by repeating\n        mat = vec.repeat(size, 1)  # size x d0\n        return mat\n\n\nclass UniHyperLoRALinear(nn.Module):\n    \"\"\"Implements Universal Hyper-LoRA for a single Linear layer.\"\"\"\n\n    def __init__(\n        self,\n        base: nn.Linear,\n        adapter,\n        layer_depth: float,\n        layer_type_id: int = 0,\n    ):\n        super().__init__()\n        self.base = base\n        for p in self.base.parameters():\n            p.requires_grad = False\n        self.adapter = adapter  # shared module containing U, V, \u03c8, \u03b8\n        self.layer_depth = torch.tensor([layer_depth])  # 0-1 normalised depth\n        self.layer_type_id = torch.tensor([layer_type_id])\n\n    def forward(self, x):\n        base_out = self.base(x)\n        # Compute delta W on-the-fly\n        d_out, d_in = self.base.out_features, self.base.in_features\n        device = x.device\n        U, V = self.adapter.U.to(device), self.adapter.V.to(device)\n\n        P_out = self.adapter.dim_proj(d_out).to(device)  # d_out x d0\n        P_in = self.adapter.dim_proj(d_in).to(device).t()  # d0 x d_in\n\n        meta_vec = torch.cat(\n            [\n                self.layer_depth.to(device),\n                torch.tensor([layer_type_id_to_vec(self.layer_type_id)], device=device),\n            ]\n        )\n        # mixer\n        g = self.adapter.mixer(meta_vec)  # -\u003e M\n        topk = torch.topk(g, k=self.adapter.router_top_k)\n        indices = topk.indices\n        values = topk.values\n        delta_w = torch.zeros(d_out, d_in, device=device)\n        for val, idx in zip(values, indices):\n            u = U[idx]\n            v = V[idx]\n            delta_j = torch.outer(u, v)  # d0 x d0\n            delta_w += val * (P_out @ delta_j @ P_in)\n        result = base_out + F.linear(x, delta_w)\n        return result\n\n\ndef layer_type_id_to_vec(tid: int):\n    # simple embedding of type id into scalar [0-1]\n    return float(tid % 5) / 4.0\n\n\nclass SharedUniHyperLoRA(nn.Module):\n    \"\"\"Container for shared UniHyperLoRA parameters (U, V, dim projector, mixer).\"\"\"\n\n    def __init__(self, M=128, d0=256, router_top_k=2):\n        super().__init__()\n        self.U = nn.Parameter(torch.randn(M, d0) * 0.02)\n        self.V = nn.Parameter(torch.randn(M, d0) * 0.02)\n        self.dim_proj = DimAwareProjector(d0)\n        self.mixer = nn.Sequential(\n            nn.Linear(1 + 1, 128),  # depth + type_id scalar\n            nn.SiLU(),\n            nn.Linear(128, M),\n        )\n        self.router_top_k = router_top_k\n\n\n# -----------------------------------------------------------------------------\n# Helper functions\n# -----------------------------------------------------------------------------\n\ndef adapter_parameter_names(model: nn.Module) -\u003e List[str]:\n    return [n for n, p in model.named_parameters() if p.requires_grad]\n\n\ndef compute_adapter_params(model: nn.Module) -\u003e int:\n    return sum(p.numel() * p.element_size() for n, p in model.named_parameters() if p.requires_grad)\n\n\n# -----------------------------------------------------------------------------\n# Building full model with adapters\n# -----------------------------------------------------------------------------\n\ndef build_model_with_adapters(cfg, num_labels: int, device):\n    model_name = cfg.model.host_model_name\n    base_config = AutoConfig.from_pretrained(model_name, num_labels=num_labels, cache_dir=\".cache/\")\n\n    if cfg.dataset.name.lower() == \"conll2003\":\n        base_model = AutoModelForTokenClassification.from_pretrained(\n            model_name, config=base_config, cache_dir=\".cache/\"\n        )\n    else:\n        raise ValueError(\"Unsupported dataset in this example\")\n\n    if cfg.adapter.name.lower() == \"sat-lora\" or cfg.method.startswith(\"comparative\"):\n        # inject standard LoRA wrappers\n        target_modules = cfg.adapter.target_modules\n        for name, module in base_model.named_modules():\n            if any(tm in name for tm in target_modules) and isinstance(module, nn.Linear):\n                parent = _get_parent_module(base_model, name)\n                child_name = name.split(\".\")[-1]\n                wrapped = LoRALinear(\n                    module,\n                    r=cfg.adapter.lora_rank,\n                    alpha=cfg.adapter.lora_alpha,\n                )\n                setattr(parent, child_name, wrapped)\n    elif cfg.adapter.name.lower() == \"unihyperlora\" or cfg.method.startswith(\"proposed\"):\n        shared_adapter = SharedUniHyperLoRA(\n            M=cfg.adapter.atoms,\n            d0=cfg.adapter.anchor_dim,\n            router_top_k=cfg.adapter.router_top_k,\n        )\n        layer_idx = 0\n        total_layers = sum(1 for m in base_model.modules() if isinstance(m, nn.Linear))\n        for name, module in base_model.named_modules():\n            if isinstance(module, nn.Linear):\n                parent = _get_parent_module(base_model, name)\n                child_name = name.split(\".\")[-1]\n                depth_norm = layer_idx / max(1, total_layers - 1)\n                wrapped = UniHyperLoRALinear(\n                    module, shared_adapter, layer_depth=depth_norm, layer_type_id=0\n                )\n                setattr(parent, child_name, wrapped)\n                layer_idx += 1\n    else:\n        raise ValueError(\"Unknown adapter name\")\n\n    base_model.to(device)\n\n    # freeze everything except adapters\n    for n, p in base_model.named_parameters():\n        p.requires_grad = n in adapter_parameter_names(base_model)\n\n    return base_model\n\n\ndef _get_parent_module(model: nn.Module, module_name: str):\n    \"\"\"Utility to fetch parent module by traversing with dot-notation name.\"\"\"\n    parts = module_name.split(\".\")\n    parent = model\n    for p in parts[:-1]:\n        parent = getattr(parent, p)\n    return parent\n", "preprocess_py": "from typing import Tuple, List\n\nimport torch\nfrom datasets import load_dataset\nfrom transformers import AutoTokenizer, DataCollatorForTokenClassification, DataCollatorWithPadding\nfrom torch.utils.data import DataLoader\nfrom omegaconf import DictConfig\nfrom pathlib import Path\n\nCACHE_DIR = \".cache/\"\n\n\ndef tokenize_and_align_labels(examples, tokenizer, label_all_tokens: bool, label2id):\n    tokenized_inputs = tokenizer(\n        examples[\"tokens\"],\n        truncation=True,\n        is_split_into_words=True,\n        max_length=tokenizer.model_max_length,\n    )\n    labels = []\n    for i, label in enumerate(examples[\"ner_tags\"]):\n        word_ids = tokenized_inputs.word_ids(batch_index=i)\n        previous_word_idx = None\n        label_ids = []\n        for word_idx in word_ids:\n            if word_idx is None:\n                label_ids.append(-100)\n            elif word_idx != previous_word_idx:\n                label_ids.append(label[word_idx])\n            else:\n                label_ids.append(label[word_idx] if label_all_tokens else -100)\n            previous_word_idx = word_idx\n        labels.append(label_ids)\n    tokenized_inputs[\"labels\"] = labels\n    return tokenized_inputs\n\n\ndef build_dataloaders(cfg: DictConfig, cache_dir: str):\n    dataset_cfg = cfg.dataset\n    task_name = dataset_cfg.name.lower()\n\n    tokenizer = AutoTokenizer.from_pretrained(\n        cfg.model.host_model_name, cache_dir=cache_dir, use_fast=True\n    )\n\n    if task_name == \"conll2003\":\n        raw_ds = load_dataset(dataset_cfg.hf_id, cache_dir=cache_dir)\n        label_list = raw_ds[\"train\"].features[\"ner_tags\"].feature.names\n        train_ds = raw_ds[dataset_cfg.splits.train]\n        val_ds = raw_ds[dataset_cfg.splits.validation]\n        tokenize_fn = lambda x: tokenize_and_align_labels(\n            x, tokenizer, False, None\n        )\n        train_ds = train_ds.map(\n            tokenize_fn,\n            batched=True,\n            desc=\"Tokenize train\",\n            remove_columns=train_ds.column_names,\n        )\n        val_ds = val_ds.map(\n            tokenize_fn,\n            batched=True,\n            desc=\"Tokenize val\",\n            remove_columns=val_ds.column_names,\n        )\n        collator = DataCollatorForTokenClassification(tokenizer)\n    else:\n        # Generic classification task (BoolQ, Amazon Reviews)\n        raw_ds = load_dataset(dataset_cfg.hf_id, cache_dir=cache_dir)\n        label_list = raw_ds[\"train\"].features[\"label\"].names\n        train_ds = raw_ds[dataset_cfg.splits.train]\n        val_ds = raw_ds[dataset_cfg.splits.validation]\n\n        def tok_fn(examples):\n            return tokenizer(\n                examples[\"text\"], truncation=True, max_length=dataset_cfg.max_length\n            )\n\n        train_ds = train_ds.map(tok_fn, batched=True, remove_columns=train_ds.column_names)\n        val_ds = val_ds.map(tok_fn, batched=True, remove_columns=val_ds.column_names)\n        collator = DataCollatorWithPadding(tokenizer)\n\n    # dataloaders\n    train_loader = DataLoader(\n        train_ds,\n        batch_size=cfg.training.batch_size,\n        shuffle=True,\n        collate_fn=collator,\n    )\n    val_loader = DataLoader(\n        val_ds,\n        batch_size=cfg.training.batch_size,\n        shuffle=False,\n        collate_fn=collator,\n    )\n    # For trial mode limit to 2 batches (handled in caller)\n    if cfg.mode == \"trial\":\n        train_loader = list(train_loader)[:2]\n        val_loader = list(val_loader)[:2]\n    return train_loader, val_loader, label_list\n\n\ndef get_num_labels(cfg: DictConfig):\n    dataset_cfg = cfg.dataset\n    if dataset_cfg.name.lower() == \"conll2003\":\n        raw_ds = load_dataset(dataset_cfg.hf_id, split=dataset_cfg.splits.train)\n        label_list = raw_ds.features[\"ner_tags\"].feature.names\n    else:\n        raw_ds = load_dataset(dataset_cfg.hf_id, split=dataset_cfg.splits.train)\n        label_list = raw_ds.features[\"label\"].names\n    return len(label_list)\n", "pyproject_toml": "[build-system]\nrequires = [\"setuptools\", \"wheel\"]\n\n[project]\nname = \"unihyperlora-experiments\"\nversion = \"0.1.0\"\ndescription = \"Universal Hyper-LoRA experiments with Hydra configuration\"\nauthors = [ {name = \"AI Researcher\"} ]\nrequires-python = \"\u003e=3.10\"\ndependencies = [\n    \"torch\u003e=2.1.0\",\n    \"transformers\u003e=4.36.0\",\n    \"datasets\u003e=2.14.0\",\n    \"hydra-core\u003e=1.3.2\",\n    \"wandb\u003e=0.16.0\",\n    \"optuna\u003e=3.4.0\",\n    \"evaluate\u003e=0.4.1\",\n    \"seqeval\u003e=1.2.2\",\n    \"scikit-learn\u003e=1.3.0\",\n    \"matplotlib\u003e=3.8.0\",\n    \"seaborn\u003e=0.13.0\",\n    \"tqdm\u003e=4.66.0\",\n    \"typer\u003e=0.9.0\",\n]", "train_py": "import os\nimport sys\nimport json\nimport math\nimport subprocess\nfrom pathlib import Path\nfrom typing import Dict, Any\n\nimport torch\nimport torch.nn.functional as F\nfrom torch import nn\nfrom torch.utils.data import DataLoader\nfrom tqdm.auto import tqdm\n\nimport hydra\nfrom omegaconf import OmegaConf, DictConfig\n\nimport wandb\nimport optuna\n\n# local imports\nfrom .preprocess import build_dataloaders, get_num_labels\nfrom .model import (\n    build_model_with_adapters,\n    adapter_parameter_names,\n    compute_adapter_params,\n)\n\nCACHE_DIR = \".cache/\"\n\n\ndef set_seed(seed: int):\n    import random\n    import numpy as np\n\n    torch.manual_seed(seed)\n    random.seed(seed)\n    np.random.seed(seed)\n    torch.cuda.manual_seed_all(seed)\n\n\ndef _prepare_cfg(cfg: DictConfig):\n    \"\"\"Merge the run specific file, adjust for mode, create output folder.\"\"\"\n\n    run_cfg_path = (\n        Path(__file__).resolve().parent.parent / \"config\" / \"runs\" / f\"{cfg.run}.yaml\"\n    )\n    if not run_cfg_path.exists():\n        raise FileNotFoundError(f\"Run-config file not found: {run_cfg_path}\")\n\n    run_cfg = OmegaConf.load(run_cfg_path)\n    cfg = OmegaConf.merge(cfg, run_cfg)\n\n    # Mode specific overrides\n    if cfg.mode == \"trial\":\n        cfg.wandb.mode = \"disabled\"\n        cfg.optuna.n_trials = 0\n        # one training step / epoch so make sure\n        if \"epochs\" in cfg.training:\n            cfg.training.epochs = 1\n        cfg.training.max_steps = 2  # 2 batches max\n    elif cfg.mode == \"full\":\n        cfg.wandb.mode = \"online\"\n    else:\n        raise ValueError(\"mode must be \u0027trial\u0027 or \u0027full\u0027\")\n\n    # Create output directory for artifacts\n    cfg.results_dir = os.path.abspath(cfg.results_dir)\n    os.makedirs(cfg.results_dir, exist_ok=True)\n\n    # Persist the composed config inside results dir for reproducibility\n    with open(os.path.join(cfg.results_dir, f\"{cfg.run}_final_cfg.yaml\"), \"w\") as fp:\n        OmegaConf.save(cfg, fp)\n\n    return cfg\n\n\ndef _init_wandb(cfg: DictConfig):\n    if cfg.wandb.mode == \"disabled\":\n        return None\n    run = wandb.init(\n        entity=cfg.wandb.entity,\n        project=cfg.wandb.project,\n        id=cfg.run,\n        resume=\"allow\",\n        mode=cfg.wandb.mode,\n        config=OmegaConf.to_container(cfg, resolve=True),\n        dir=cfg.results_dir,\n    )\n    print(f\"WandB URL: {run.url}\")\n    return run\n\n\ndef _evaluate(model, dataloader, device, metric_name):\n    import evaluate as hf_eval\n\n    metric = hf_eval.load(metric_name, cache_dir=CACHE_DIR)\n    model.eval()\n    all_preds, all_labels = [], []\n    for batch in dataloader:\n        with torch.no_grad():\n            labels = batch.pop(\"labels\").to(device)\n            batch = {k: v.to(device) for k, v in batch.items()}\n            logits = model(**batch).logits\n        preds = logits.argmax(-1).cpu()\n        if metric_name == \"seqeval\":\n            # remove ignored index (special tokens)\n            active_preds, active_labels = [], []\n            for p, l in zip(preds, labels.cpu()):\n                active_p = [int(x) for x in p]\n                active_l = [int(x) for x in l]\n                active_preds.append(active_p)\n                active_labels.append(active_l)\n            metric.add_batch(predictions=active_preds, references=active_labels)\n        else:\n            metric.add_batch(predictions=preds, references=labels.cpu())\n    result = metric.compute()\n    # seqeval returns dictionary with many scores, grab f1 if available\n    if isinstance(result, dict):\n        if \"overall_f1\" in result:\n            return {\"f1\": result[\"overall_f1\"], **result}\n        else:\n            return result\n    return {metric_name: result}\n\n\ndef training_step(model, batch, optimizer, scheduler, device, scaler=None):\n    model.train()\n    labels = batch.pop(\"labels\").to(device)\n    batch = {k: v.to(device) for k, v in batch.items()}\n    if scaler is not None:\n        with torch.cuda.amp.autocast():\n            outputs = model(**batch, labels=labels)\n            loss = outputs.loss\n        scaler.scale(loss).backward()\n        scaler.step(optimizer)\n        scaler.update()\n    else:\n        outputs = model(**batch, labels=labels)\n        loss = outputs.loss\n        loss.backward()\n        optimizer.step()\n    optimizer.zero_grad()\n    if scheduler is not None:\n        scheduler.step()\n    return loss.item()\n\n\ndef _objective(trial, cfg: DictConfig, model_init_fn, train_dataloader, val_dataloader, device):\n    \"\"\"Optuna objective that returns best validation metric.\"\"\"\n    # sample hyperparameters\n    for k, v in cfg.optuna.search_space.items():\n        if v[\"type\"] == \"loguniform\":\n            sampled = trial.suggest_float(k, v[\"low\"], v[\"high\"], log=True)\n        elif v[\"type\"] == \"uniform\":\n            sampled = trial.suggest_float(k, v[\"low\"], v[\"high\"], log=False)\n        elif v[\"type\"] == \"categorical\":\n            sampled = trial.suggest_categorical(k, v[\"choices\"])\n        elif v[\"type\"] == \"int\":\n            sampled = trial.suggest_int(k, v[\"low\"], v[\"high\"])\n        else:\n            raise ValueError(f\"Unknown optuna space type: {v[\u0027type\u0027]}\")\n        OmegaConf.update(cfg, k, sampled)\n\n    model = model_init_fn()\n    optimizer = torch.optim.AdamW(\n        [p for p in model.parameters() if p.requires_grad],\n        lr=cfg.training.learning_rate,\n        weight_decay=cfg.training.weight_decay,\n    )\n    scaler = torch.cuda.amp.GradScaler() if device.type == \"cuda\" else None\n\n    best_metric = -float(\"inf\")\n    eval_every = max(1, cfg.training.max_steps // 5)\n    step = 0\n    for epoch in range(1):\n        for batch in train_dataloader:\n            loss = training_step(model, batch, optimizer, None, device, scaler)\n            step += 1\n            if step % eval_every == 0:\n                metrics = _evaluate(model, val_dataloader, device, cfg.evaluation.metric)\n                key = \"f1\" if \"f1\" in metrics else list(metrics.keys())[0]\n                score = metrics[key]\n                trial.report(score, step)\n                if trial.should_prune():\n                    raise optuna.TrialPruned()\n                if score \u003e best_metric:\n                    best_metric = score\n            if step \u003e= cfg.training.max_steps // 4:  # early stop for speed\n                break\n    return best_metric\n\n\n@hydra.main(version_base=\"1.3\", config_path=\"../config\", config_name=\"config\")\ndef main(cfg: DictConfig):\n    cfg = _prepare_cfg(cfg)\n    set_seed(cfg.training.seed)\n\n    device = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\n\n    # Build dataloaders\n    train_loader, val_loader, label_list = build_dataloaders(cfg, CACHE_DIR)\n    num_labels = len(label_list)\n\n    def model_init_fn():\n        return build_model_with_adapters(cfg, num_labels, device)\n\n    # Run Optuna search if enabled (\u003e0 trials)\n    if cfg.optuna.n_trials \u003e 0:\n        study = optuna.create_study(direction=cfg.optuna.direction)\n        study.optimize(\n            lambda trial: _objective(\n                trial, cfg, model_init_fn, train_loader, val_loader, device\n            ),\n            n_trials=cfg.optuna.n_trials,\n        )\n        print(f\"[Optuna] Best trial: {study.best_trial.number} -\u003e value {study.best_trial.value}\")\n        # update config with best params\n        for k, v in study.best_trial.params.items():\n            OmegaConf.update(cfg, k, v, merge=True)\n\n    # final model training (single run) \u2013 this will be logged to WandB\n    model = model_init_fn()\n    optimizer = torch.optim.AdamW(\n        [p for p in model.parameters() if p.requires_grad],\n        lr=cfg.training.learning_rate,\n        weight_decay=cfg.training.weight_decay,\n    )\n    total_steps = cfg.training.max_steps\n    scheduler = torch.optim.lr_scheduler.LinearLR(\n        optimizer, start_factor=1.0, end_factor=0.0, total_iters=total_steps\n    )\n\n    scaler = torch.cuda.amp.GradScaler() if device.type == \"cuda\" else None\n\n    wandb_run = _init_wandb(cfg)\n    adapter_param_mb = compute_adapter_params(model) / 1e6\n    if wandb_run is not None:\n        wandb_run.summary[\"adapter_params_mb\"] = adapter_param_mb\n\n    global_step = 0\n    epoch = 0\n    progress = tqdm(total=total_steps, desc=\"Training\")\n    while global_step \u003c total_steps:\n        epoch += 1\n        for batch in train_loader:\n            loss_val = training_step(model, batch, optimizer, scheduler, device, scaler)\n\n            if wandb_run is not None:\n                wandb.log({\"train_loss\": loss_val, \"step\": global_step})\n\n            global_step += 1\n            progress.update(1)\n            if global_step % cfg.evaluation.eval_steps == 0:\n                eval_metrics = _evaluate(model, val_loader, device, cfg.evaluation.metric)\n                eval_metrics = {f\"eval_{k}\": v for k, v in eval_metrics.items()}\n                if wandb_run is not None:\n                    wandb.log({**eval_metrics, \"step\": global_step})\n            if global_step \u003e= total_steps:\n                break\n    progress.close()\n\n    # final evaluation\n    final_metrics = _evaluate(model, val_loader, device, cfg.evaluation.metric)\n    final_metrics = {f\"final_{k}\": v for k, v in final_metrics.items()}\n    print(f\"Final metrics: {final_metrics}\")\n    if wandb_run is not None:\n        for k, v in final_metrics.items():\n            wandb_run.summary[k] = v\n        wandb_run.finish()\n\n\nif __name__ == \"__main__\":\n    main()"}
+
+
+
+Analyze the experiment code thoroughly. Ensure it is complete, executable, and ready for publication-quality research experiments.
+Output:
+{
+    "is_code_ready": false,
+    "code_issue": "The experiment package cannot be executed as-is. Major blocking issues:\n\n1. Module import / file-structure mismatch\n   • Commands rely on “python -m src.train” / “python -m src.main”, which requires src/__init__.py (a package) – but the required file list forbids adding it, so the entry points will fail with ‘No module named src’.\n   • train.py, model.py, preprocess.py use “from .preprocess import …” style relative imports that only work inside a package. Without __init__.py every relative import raises ImportError.\n\n2. Broken UniHyperLoRA implementation\n   • UniHyperLoRALinear builds meta_vec as a 1-D tensor (shape [2]); nn.Linear expects 2-D – forward pass will raise a matmul shape error.\n   • layer_type_id_to_vec is called with a tensor instead of int causing TypeError.\n   • delta_W is added via F.linear(x, delta_w) but delta_w has shape [d_out,d_in] while F.linear expects weight [out,in]; ordering is wrong and gradients on shared adapter parameters are not preserved.\n\n3. Data / evaluation flaws\n   • seqeval expects string label sequences; _evaluate passes integer ids, producing invalid metric computation.\n   • build_dataloaders truncates loaders to lists in trial mode; returning list breaks later DataLoader iteration logic that expects an iterator (tqdm etc.).\n\n4. WandB & optuna integration gaps\n   • trial mode sets cfg.wandb.mode=\"disabled\" only after run config merge but _init_wandb is called later; OK, but optuna objective still writes sampled hyper-params back into the original cfg causing global side-effects and conflicting types.\n\n5. Miscellaneous\n   • _get_parent_module uses string parsing that fails for modules inside nested nn.Sequential objects containing indexes.\n   • config save call OmegaConf.save(cfg, fp) uses wrong argument order – throws TypeError.\n\nBecause of these defects the code will not run and does not satisfy the “complete, production-ready” requirement."
+}
