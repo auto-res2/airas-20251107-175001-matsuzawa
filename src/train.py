@@ -248,6 +248,16 @@ def main(cfg: DictConfig):
     if cfg.run is None:
         raise ValueError("Parameter 'run' must be supplied: python -m src.train run=<run_id> ...")
 
+    # Load run-specific configuration
+    from hydra import compose, initialize_config_dir
+    from pathlib import Path
+    run_config_path = Path(__file__).parent.parent / "config" / "runs" / f"{cfg.run}.yaml"
+    if run_config_path.exists():
+        import yaml
+        with open(run_config_path, 'r') as f:
+            run_cfg = OmegaConf.create(yaml.safe_load(f))
+        cfg = OmegaConf.merge(cfg, run_cfg)
+
     _apply_mode_overrides(cfg)
     _ensure_results_dir(cfg)
 

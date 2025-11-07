@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 import hydra
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 
 
 @hydra.main(version_base="1.3", config_path="../config", config_name="config")
@@ -13,6 +13,15 @@ def main(cfg: DictConfig):
         raise ValueError(
             "Usage: python -m src.main run=<run_id> results_dir=<dir> mode=<trial|full>"
         )
+
+    # Load run-specific configuration to validate
+    from pathlib import Path
+    import yaml
+    run_config_path = Path(__file__).parent.parent / "config" / "runs" / f"{cfg.run}.yaml"
+    if run_config_path.exists():
+        with open(run_config_path, 'r') as f:
+            run_cfg = OmegaConf.create(yaml.safe_load(f))
+        cfg = OmegaConf.merge(cfg, run_cfg)
 
     overrides = [
         f"run={cfg.run}",

@@ -1,9 +1,5 @@
-defaults:
-  - runs/${run}
-  - _self_
-
 # Required CLI args -----------------------------------------------------------
-run: "???"           # run group identifier, e.g., proposed-iter1-CoNLL-2003
+run: ???           # run group identifier, e.g., proposed-iter1-CoNLL-2003
 mode: full           # full | trial
 results_dir: outputs
 
