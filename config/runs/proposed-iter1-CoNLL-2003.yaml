@@ -19,7 +19,7 @@ adapter:
   lambda_Q: 1.0e-5
 dataset:
   name: conll2003
-  hf_id: eriktks/conll2003
+  hf_id: lhoestq/conll2003
   splits:
     train: train
     validation: validation
