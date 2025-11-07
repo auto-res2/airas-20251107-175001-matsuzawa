@@ -1,0 +1,320 @@
+
+LLM Name: o3-2025-04-16
+Input:
+# Instructions:
+You determine whether the Python script has succeeded or failed based on the given information.
+Output True if the script SUCCEEDED, False if it FAILED.
+Follow the rules below:
+
+# Rules:
+- Output False if "Standard Error" contains any error messages or exceptions.
+- Output True if the script completed without errors and "Standard Output" shows evidence of successful execution, such as:
+  - Completion messages indicating the script finished normally
+  - Progress logs showing the script ran through its stages
+  - Any output indicating normal termination (even if minimal in trial mode)
+- The script may be running in trial mode (lightweight validation), so minimal output is acceptable as long as there are no errors.
+
+# Standard Error:
+Using CPython 3.11.13
+Creating virtual environment at: .venv
+Resolved 108 packages in 665ms
+Installed 99 packages in 4.97s
+ + aiohappyeyeballs==2.6.1
+ + aiohttp==3.13.2
+ + aiosignal==1.4.0
+ + alembic==1.17.1
+ + annotated-types==0.7.0
+ + antlr4-python3-runtime==4.9.3
+ + anyio==4.11.0
+ + attrs==25.4.0
+ + certifi==2025.10.5
+ + charset-normalizer==3.4.4
+ + click==8.3.0
+ + colorlog==6.10.1
+ + contourpy==1.3.3
+ + cycler==0.12.1
+ + datasets==4.4.1
+ + dill==0.4.0
+ + evaluate==0.4.6
+ + filelock==3.20.0
+ + fonttools==4.60.1
+ + frozenlist==1.8.0
+ + fsspec==2025.10.0
+ + gitdb==4.0.12
+ + gitpython==3.1.45
+ + greenlet==3.2.4
+ + h11==0.16.0
+ + hf-xet==1.2.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + huggingface-hub==0.36.0
+ + hydra-core==1.3.2
+ + idna==3.11
+ + jinja2==3.1.6
+ + joblib==1.5.2
+ + kiwisolver==1.4.9
+ + mako==1.3.10
+ + markupsafe==3.0.3
+ + matplotlib==3.10.7
+ + mpmath==1.3.0
+ + multidict==6.7.0
+ + multiprocess==0.70.18
+ + networkx==3.5
+ + numpy==2.3.4
+ + nvidia-cublas-cu12==12.8.4.1
+ + nvidia-cuda-cupti-cu12==12.8.90
+ + nvidia-cuda-nvrtc-cu12==12.8.93
+ + nvidia-cuda-runtime-cu12==12.8.90
+ + nvidia-cudnn-cu12==9.10.2.21
+ + nvidia-cufft-cu12==11.3.3.83
+ + nvidia-cufile-cu12==1.13.1.3
+ + nvidia-curand-cu12==10.3.9.90
+ + nvidia-cusolver-cu12==11.7.3.90
+ + nvidia-cusparse-cu12==12.5.8.93
+ + nvidia-cusparselt-cu12==0.7.1
+ + nvidia-nccl-cu12==2.27.5
+ + nvidia-nvjitlink-cu12==12.8.93
+ + nvidia-nvshmem-cu12==3.3.20
+ + nvidia-nvtx-cu12==12.8.90
+ + omegaconf==2.3.0
+ + optuna==4.5.0
+ + packaging==25.0
+ + pandas==2.3.3
+ + pillow==12.0.0
+ + platformdirs==4.5.0
+ + propcache==0.4.1
+ + protobuf==6.33.0
+ + pyarrow==22.0.0
+ + pydantic==2.12.4
+ + pydantic-core==2.41.5
+ + pyparsing==3.2.5
+ + python-dateutil==2.9.0.post0
+ + pytz==2025.2
+ + pyyaml==6.0.3
+ + regex==2025.11.3
+ + requests==2.32.5
+ + safetensors==0.6.2
+ + scikit-learn==1.7.2
+ + scipy==1.16.3
+ + seaborn==0.13.2
+ + sentry-sdk==2.43.0
+ + seqeval==1.2.2
+ + six==1.17.0
+ + smmap==5.0.2
+ + sniffio==1.3.1
+ + sqlalchemy==2.0.44
+ + sympy==1.14.0
+ + threadpoolctl==3.6.0
+ + tokenizers==0.22.1
+ + torch==2.9.0
+ + tqdm==4.67.1
+ + transformers==4.57.1
+ + triton==3.5.0
+ + typing-extensions==4.15.0
+ + typing-inspection==0.4.2
+ + tzdata==2025.2
+ + unihyperlora-experiments==0.1.0 (from file:///home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa)
+ + urllib3==2.5.0
+ + wandb==0.22.3
+ + xxhash==3.6.0
+ + yarl==1.22.0
+Generating train split:   0%|          | 0/14041 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 14041/14041 [00:00<00:00, 238784.84 examples/s]
+Generating validation split:   0%|          | 0/3250 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 3250/3250 [00:00<00:00, 260610.41 examples/s]
+Generating test split:   0%|          | 0/3453 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 3453/3453 [00:00<00:00, 348256.23 examples/s]
+Map:   0%|          | 0/64 [00:00<?, ? examples/s]Map: 100%|██████████| 64/64 [00:00<00:00, 2067.38 examples/s]
+Map:   0%|          | 0/64 [00:00<?, ? examples/s]Map: 100%|██████████| 64/64 [00:00<00:00, 1645.30 examples/s]
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py:303: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler() if device.type == "cuda" else None
+Training:   0%|          | 0/2 [00:00<?, ?it/s]/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py:138: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast():
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:192: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn(
+Training:  50%|█████     | 1/2 [00:03<00:03,  3.92s/it]
+Downloading builder script: 0.00B [00:00, ?B/s][ADownloading builder script: 6.34kB [00:00, 11.2MB/s]
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_0 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_3 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_5 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_7 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_8 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_1 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_2 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_6 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_4 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/v1.py:57: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Training: 100%|██████████| 2/2 [00:07<00:00,  3.90s/it]Training: 100%|██████████| 2/2 [00:10<00:00,  5.15s/it]
+Using CPython 3.11.14
+Creating virtual environment at: .venv
+Resolved 108 packages in 589ms
+Installed 99 packages in 7.12s
+ + aiohappyeyeballs==2.6.1
+ + aiohttp==3.13.2
+ + aiosignal==1.4.0
+ + alembic==1.17.1
+ + annotated-types==0.7.0
+ + antlr4-python3-runtime==4.9.3
+ + anyio==4.11.0
+ + attrs==25.4.0
+ + certifi==2025.10.5
+ + charset-normalizer==3.4.4
+ + click==8.3.0
+ + colorlog==6.10.1
+ + contourpy==1.3.3
+ + cycler==0.12.1
+ + datasets==4.4.1
+ + dill==0.4.0
+ + evaluate==0.4.6
+ + filelock==3.20.0
+ + fonttools==4.60.1
+ + frozenlist==1.8.0
+ + fsspec==2025.10.0
+ + gitdb==4.0.12
+ + gitpython==3.1.45
+ + greenlet==3.2.4
+ + h11==0.16.0
+ + hf-xet==1.2.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + huggingface-hub==0.36.0
+ + hydra-core==1.3.2
+ + idna==3.11
+ + jinja2==3.1.6
+ + joblib==1.5.2
+ + kiwisolver==1.4.9
+ + mako==1.3.10
+ + markupsafe==3.0.3
+ + matplotlib==3.10.7
+ + mpmath==1.3.0
+ + multidict==6.7.0
+ + multiprocess==0.70.18
+ + networkx==3.5
+ + numpy==2.3.4
+ + nvidia-cublas-cu12==12.8.4.1
+ + nvidia-cuda-cupti-cu12==12.8.90
+ + nvidia-cuda-nvrtc-cu12==12.8.93
+ + nvidia-cuda-runtime-cu12==12.8.90
+ + nvidia-cudnn-cu12==9.10.2.21
+ + nvidia-cufft-cu12==11.3.3.83
+ + nvidia-cufile-cu12==1.13.1.3
+ + nvidia-curand-cu12==10.3.9.90
+ + nvidia-cusolver-cu12==11.7.3.90
+ + nvidia-cusparse-cu12==12.5.8.93
+ + nvidia-cusparselt-cu12==0.7.1
+ + nvidia-nccl-cu12==2.27.5
+ + nvidia-nvjitlink-cu12==12.8.93
+ + nvidia-nvshmem-cu12==3.3.20
+ + nvidia-nvtx-cu12==12.8.90
+ + omegaconf==2.3.0
+ + optuna==4.5.0
+ + packaging==25.0
+ + pandas==2.3.3
+ + pillow==12.0.0
+ + platformdirs==4.5.0
+ + propcache==0.4.1
+ + protobuf==6.33.0
+ + pyarrow==22.0.0
+ + pydantic==2.12.4
+ + pydantic-core==2.41.5
+ + pyparsing==3.2.5
+ + python-dateutil==2.9.0.post0
+ + pytz==2025.2
+ + pyyaml==6.0.3
+ + regex==2025.11.3
+ + requests==2.32.5
+ + safetensors==0.6.2
+ + scikit-learn==1.7.2
+ + scipy==1.16.3
+ + seaborn==0.13.2
+ + sentry-sdk==2.43.0
+ + seqeval==1.2.2
+ + six==1.17.0
+ + smmap==5.0.2
+ + sniffio==1.3.1
+ + sqlalchemy==2.0.44
+ + sympy==1.14.0
+ + threadpoolctl==3.6.0
+ + tokenizers==0.22.1
+ + torch==2.9.0
+ + tqdm==4.67.1
+ + transformers==4.57.1
+ + triton==3.5.0
+ + typing-extensions==4.15.0
+ + typing-inspection==0.4.2
+ + tzdata==2025.2
+ + unihyperlora-experiments==0.1.0 (from file:///mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa)
+ + urllib3==2.5.0
+ + wandb==0.22.3
+ + xxhash==3.6.0
+ + yarl==1.22.0
+Generating train split:   0%|          | 0/14041 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 14041/14041 [00:00<00:00, 164689.73 examples/s]
+Generating validation split:   0%|          | 0/3250 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 3250/3250 [00:00<00:00, 159079.10 examples/s]
+Generating test split:   0%|          | 0/3453 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 3453/3453 [00:00<00:00, 207828.31 examples/s]
+Map:   0%|          | 0/64 [00:00<?, ? examples/s]Map: 100%|██████████| 64/64 [00:00<00:00, 2186.83 examples/s]
+Map:   0%|          | 0/64 [00:00<?, ? examples/s]Map: 100%|██████████| 64/64 [00:00<00:00, 7167.45 examples/s]
+Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py:303: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler() if device.type == "cuda" else None
+Training:   0%|          | 0/2 [00:00<?, ?it/s]/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py:138: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast():
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:192: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn(
+Training:  50%|█████     | 1/2 [00:00<00:00,  1.58it/s]
+Downloading builder script: 0.00B [00:00, ?B/s][ADownloading builder script: 6.34kB [00:00, 8.21MB/s]
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_0 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_3 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_5 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_7 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_8 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_1 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_2 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_6 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/sequence_labeling.py:171: UserWarning: LABEL_4 seems not to be NE tag.
+  warnings.warn('{} seems not to be NE tag.'.format(chunk))
+/mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/seqeval/metrics/v1.py:57: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Training: 100%|██████████| 2/2 [00:02<00:00,  1.51s/it]Training: 100%|██████████| 2/2 [00:03<00:00,  1.99s/it]
+
+# Standard Output:
+=== [UV SYNC] Start at Fri Nov  7 07:18:08 PM UTC 2025 ===
+=== [UV SYNC] Finished successfully at Fri Nov  7 07:18:14 PM UTC 2025 ===
+=== [TRIAL RUN] Start for proposed-iter1-CoNLL-2003 at Fri Nov  7 07:18:14 PM UTC 2025 ===
+🚀 Launching: /home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-iter1-CoNLL-2003 results_dir=.research/iteration1 mode=trial
+[2025-11-07 19:18:50,163][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Final metrics: {'f1': np.float64(0.002207505518763797), 'accuracy': 0.2632146709816613}
+=== [TRIAL RUN] PASSED for proposed-iter1-CoNLL-2003 at Fri Nov  7 07:19:06 PM UTC 2025 ===
+
+=== [UV SYNC] Start at Fri Nov  7 19:20:03 UTC 2025 ===
+=== [UV SYNC] Finished successfully at Fri Nov  7 19:20:11 UTC 2025 ===
+=== [TRIAL RUN] Start for comparative-1-iter1-CoNLL-2003 at Fri Nov  7 19:20:11 UTC 2025 ===
+🚀 Launching: /mnt/home/toma/KRK-039/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-iter1-CoNLL-2003 results_dir=.research/iteration1 mode=trial
+[2025-11-08 04:21:14,744][transformers.modeling_utils][WARNING] - Some weights of DistilBertForTokenClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Final metrics: {'f1': np.float64(0.010050251256281407), 'accuracy': 0.07119741100323625}
+=== [TRIAL RUN] PASSED for comparative-1-iter1-CoNLL-2003 at Fri Nov  7 19:21:25 UTC 2025 ===
+
+
+Output:
+{
+    "is_experiment_successful": true
+}
