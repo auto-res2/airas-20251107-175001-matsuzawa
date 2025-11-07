@@ -718,7 +718,45 @@
     "iterations": [
       {
         "iteration_id": 1,
-        "method": "Universal Hyper‐LoRA (UniHyperLoRA)  1. Canonical atom dictionary  U∈ℝ^{M×d₀}, V∈ℝ^{M×d₀} with small anchor dimension d₀=256 (8-bit, M=128). 2. Dimension-aware projectors  For a target weight of shape (d_out , d_in) we compute two thin, *factored* projectors:   P_out(d_out)∈ℝ^{d_out×d₀},  P_in(d_in)∈ℝ^{d₀×d_in}.  They are produced by a shared hyper-MLP h_ψ(size) that takes the log-scaled dimension as input (≈4 kB total). 3. Continuous mixer  g_θ(depth_norm, type_id)→ℝ^M (two-layer sine-activated MLP, 2 k params) outputs real‐valued mixing weights that are quantised to 4-bit at save-time. 4. Token- & task-conditional sparse router r_φ(h_{ℓ,i}, E(task))→Top-k(M) (k≤2) chooses active atoms. 5. Low-rank update  ΔW_{ℓ,i}=∑_{j=1}^k g_top(j)·P_out u_j v_jᵀ P_in.  All matrix multiplications are fused with the base forward pass. 6. Zero-shot portability  When UniHyperLoRA is first trained on a *source* model (e.g. BERT-base), only U,V,θ,ψ,φ are updated.  To adapt a *new* target model with unseen shapes we **freeze** U,V,ψ,φ and fine-tune a 4-bit bias δθ (≈0.5 kB) per task; no architecture-specific retraining. 7. Budget loss  L_task+λ_F·E[k]+λ_Q·‖δθ‖² keeps FLOPs and extra params bounded."
+        "method": "Universal Hyper‐LoRA (UniHyperLoRA)  1. Canonical atom dictionary  U∈ℝ^{M×d₀}, V∈ℝ^{M×d₀} with small anchor dimension d₀=256 (8-bit, M=128). 2. Dimension-aware projectors  For a target weight of shape (d_out , d_in) we compute two thin, *factored* projectors:   P_out(d_out)∈ℝ^{d_out×d₀},  P_in(d_in)∈ℝ^{d₀×d_in}.  They are produced by a shared hyper-MLP h_ψ(size) that takes the log-scaled dimension as input (≈4 kB total). 3. Continuous mixer  g_θ(depth_norm, type_id)→ℝ^M (two-layer sine-activated MLP, 2 k params) outputs real‐valued mixing weights that are quantised to 4-bit at save-time. 4. Token- & task-conditional sparse router r_φ(h_{ℓ,i}, E(task))→Top-k(M) (k≤2) chooses active atoms. 5. Low-rank update  ΔW_{ℓ,i}=∑_{j=1}^k g_top(j)·P_out u_j v_jᵀ P_in.  All matrix multiplications are fused with the base forward pass. 6. Zero-shot portability  When UniHyperLoRA is first trained on a *source* model (e.g. BERT-base), only U,V,θ,ψ,φ are updated.  To adapt a *new* target model with unseen shapes we **freeze** U,V,ψ,φ and fine-tune a 4-bit bias δθ (≈0.5 kB) per task; no architecture-specific retraining. 7. Budget loss  L_task+λ_F·E[k]+λ_Q·‖δθ‖² keeps FLOPs and extra params bounded.",
+        "experimental_design": {
+          "experiment_summary": "We first pre-train one universal UniHyperLoRA adapter on a single 12-layer BERT-base model with the SST-2 corpus.  This pre-training jointly learns (1) the canonical atom dictionary U,V, (2) the tiny continuous mixer g_θ, (3) the dimension-hyper-network h_ψ that predicts thin projectors P_in / P_out from log-scaled layer sizes, and (4) the sparse router r_φ that chooses at most k=2 atoms per token.  Only U,V,θ,ψ,φ are updated; the host model’s weights stay frozen.  After three epochs we freeze everything except a 4-bit bias δθ.\n\nFor the transfer phase we load the *same* frozen adapter weights into three unseen target architectures (DistilBERT-6L-768, BERT-large-1024, TinyBERT-4L-312).  Because the projector h_ψ is dimension-aware, it instantly produces size-compatible low-rank updates for every (d_out,d_in) pair, so no re-training is needed (zero-shot evaluation).  We then run a short 500-step PEFT fine-tuning on each downstream task (CoNLL-2003 NER, BoolQ, Amazon-Review) updating only δθ.\n\nWe compare against a strong baseline—SAT-LoRA—that must be re-learnt per architecture, as well as classical rank-8 LoRA and full fine-tuning, while enforcing the shared resource budget of ≤1 MB extra weights and ≤10 % extra FLOPs.  All experiments are executed on a single NVIDIA A100/H200 with 80 GB VRAM; the unified adapter occupies 0.97 MB in 4-bit form and adds <8 % theoretical FLOPs, satisfying the constraint.\n\nAfter training we report: (a) dev-set performance of the target model with the adapter inserted but *before* any task-specific updates (zero-shot portability) and (b) the score after 500 δθ optimisation steps.  We also log memory overhead, FLOP overhead, and average active atoms per token.  Results are expected to show that the single UniHyperLoRA file achieves near-lossless zero-shot transfer (≤1 % drop) and, after light tuning, matches or exceeds SAT-LoRA while using ~97 % less additional memory.",
+          "evaluation_metrics": [
+            "Target-model dev score under 1 MB / 10 %-FLOP budget (report zero-shot and post-tune).",
+            "Memory overhead (MB)",
+            "FLOP overhead (%)",
+            "Active atoms per token",
+            "F1 Score",
+            "Accuracy"
+          ],
+          "proposed_method": "Universal Hyper-LoRA (UniHyperLoRA) is a model-agnostic parameter-efficient fine-tuning mechanism that decouples the learned LoRA dictionary from the host architecture.\n1. Atom dictionary: Two 8-bit matrices U,V ∈ ℝ^{M×d₀} with M=128 atoms and anchor width d₀=256 hold the canonical bases that will be reused across *all* layers and models.\n2. Dimension-aware projectors: A shared two-layer MLP h_ψ takes log10(d_in) or log10(d_out) as a scalar input and outputs flattened weights for thin projectors P_in(d_in) ∈ ℝ^{d₀×d_in} and P_out(d_out) ∈ ℝ^{d_out×d₀}.  Because the mapping is continuous, it can generate projectors for unseen dimensions at inference time, enabling cross-size portability.\n3. Continuous mixer g_θ: Given the normalised depth of the layer (ℓ/L) and a one-hot encoding of the sub-module type (Q,K,V,O,FFN), a tiny sine-activated MLP (≈2 k parameters) produces real-valued mixing weights over the M atoms.  These weights are quantised to 4-bit when saved.\n4. Sparse router r_φ: A light router attends over the current hidden state h_{ℓ,i} concatenated with a learned task embedding and selects the Top-k (k≤2) atoms to activate, enforcing sparsity.\n5. Low-rank update: For every weight W_{ℓ,i} we form ΔW_{ℓ,i}= Σ_{j=1..k} g_top(j) · P_out u_j v_jᵀ P_in, and fuse it with the host forward pass.\n6. Zero-shot portability: After training on a source model we freeze U,V,ψ,φ and only fine-tune a 4-bit bias δθ per task, achieving <1 MB total adapter size.\n7. Budget regularisation: The loss L = L_task + λ_F·E[k] + λ_Q·‖δθ‖² penalises FLOPs and bias magnitude to respect the deployment budget.",
+          "comparative_methods": [
+            "SAT-LoRA"
+          ],
+          "models_to_use": [],
+          "datasets_to_use": [
+            "CoNLL-2003"
+          ],
+          "hyperparameters_to_search": {
+            "learning_rate": "5e-5-5e-4",
+            "batch_size": "32,64,128",
+            "lambda_F": "0.01-0.1",
+            "lambda_Q": "1e-6-1e-4",
+            "router_top_k": "1,2,3"
+          }
+        },
+        "experiment_runs": [
+          {
+            "run_id": "proposed-iter1-CoNLL-2003",
+            "method_name": "proposed",
+            "dataset_name": "CoNLL-2003"
+          },
+          {
+            "run_id": "comparative-1-iter1-CoNLL-2003",
+            "method_name": "comparative-1",
+            "dataset_name": "CoNLL-2003"
+          }
+        ]
       }
     ]
   }
