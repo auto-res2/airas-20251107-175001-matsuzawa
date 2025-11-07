@@ -21,7 +21,10 @@ def main(cfg: DictConfig):
     if run_config_path.exists():
         with open(run_config_path, 'r') as f:
             run_cfg = OmegaConf.create(yaml.safe_load(f))
+        # Disable struct mode to allow adding new keys during merge
+        OmegaConf.set_struct(cfg, False)
         cfg = OmegaConf.merge(cfg, run_cfg)
+        OmegaConf.set_struct(cfg, True)
 
     overrides = [
         f"run={cfg.run}",
