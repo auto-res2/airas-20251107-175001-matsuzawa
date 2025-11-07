@@ -6,5 +6,82 @@
     "prefix tuning",
     "hyperparameter optimization",
     "curriculum learning"
+  ],
+  "research_study_list": [
+    {
+      "title": "DoRA: Weight-Decomposed Low-Rank Adaptation"
+    },
+    {
+      "title": "DoRA: Weight-Decomposed Low-Rank Adaptation"
+    },
+    {
+      "title": "Adaptive Budget Allocation for Parameter-Efficient Fine-Tuning "
+    },
+    {
+      "title": "LoRA Training in the NTK Regime has No Spurious Local Minima"
+    },
+    {
+      "title": "LoRA Training in the NTK Regime has No Spurious Local Minima"
+    },
+    {
+      "title": "Adapters Strike Back"
+    },
+    {
+      "title": "Spectral Adapter: Fine-Tuning in Spectral Space"
+    },
+    {
+      "title": "Multi-Head Adapter Routing for Cross-Task Generalization"
+    },
+    {
+      "title": "Conditionally Adaptive Multi-Task Learning: Improving Transfer Learning in NLP Using Fewer Parameters & Less Data"
+    },
+    {
+      "title": "Sparse High Rank Adapters"
+    },
+    {
+      "title": "Prompting a Pretrained Transformer Can Be a Universal Approximator"
+    },
+    {
+      "title": "HyperTuning:  Toward Adapting Large Language Models without Back-propagation"
+    },
+    {
+      "title": "Prefix Conditioning Unifies Language and Label Supervision"
+    },
+    {
+      "title": "The Stability-Efficiency Dilemma: Investigating Sequence Length Warmup for Training GPT Models"
+    },
+    {
+      "title": "The Stability-Efficiency Dilemma: Investigating Sequence Length Warmup for Training GPT Models"
+    },
+    {
+      "title": "DP-HyPO: An Adaptive Private Framework for Hyperparameter Optimization"
+    },
+    {
+      "title": "Hyperparameter Optimization through Neural Network Partitioning"
+    },
+    {
+      "title": "Learning to Mutate with Hypergradient Guided Population"
+    },
+    {
+      "title": "Implicit differentiation of Lasso-type models for hyperparameter optimization"
+    },
+    {
+      "title": "Bayesian Optimization for Iterative Learning"
+    },
+    {
+      "title": "An Analytical Theory of Curriculum Learning in Teacher-Student Networks"
+    },
+    {
+      "title": "Understanding the Complexity Gains of Single-Task RL with a Curriculum"
+    },
+    {
+      "title": "Growing Action Spaces"
+    },
+    {
+      "title": "Curriculum Reinforcement Learning via Constrained Optimal Transport"
+    },
+    {
+      "title": "Curriculum Reinforcement Learning via Constrained Optimal Transport"
+    }
   ]
 }
