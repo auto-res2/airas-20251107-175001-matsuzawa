@@ -1,0 +1,10 @@
+{
+  "research_topic": "Improving fine-tuning performance of language models.",
+  "queries": [
+    "LoRA fine-tuning",
+    "adapter tuning",
+    "prefix tuning",
+    "hyperparameter optimization",
+    "curriculum learning"
+  ]
+}
