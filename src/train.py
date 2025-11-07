@@ -181,7 +181,7 @@ def _objective(
     val_loader: DataLoader,
     device: torch.device,
 ):
-    cfg_tmp = OmegaConf.deepcopy(cfg)
+    cfg_tmp = OmegaConf.create(OmegaConf.to_container(cfg, resolve=True))
     _suggest_and_apply(trial, cfg_tmp)
 
     model = model_init_fn(cfg_tmp)
