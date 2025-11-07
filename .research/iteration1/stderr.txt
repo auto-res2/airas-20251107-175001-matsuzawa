@@ -432,3 +432,189 @@ Traceback (most recent call last):
 subprocess.CalledProcessError: Command '['/home/toma/t-80-8-b-03/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/bin/python3', '-u', '-m', 'src.train', 'run=proposed-iter1-CoNLL-2003', 'results_dir=.research/iteration1', 'mode=full']' returned non-zero exit status 1.
 
 Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Using CPython 3.11.13
+Creating virtual environment at: .venv
+Resolved 108 packages in 130ms
+Installed 99 packages in 4.79s
+ + aiohappyeyeballs==2.6.1
+ + aiohttp==3.13.2
+ + aiosignal==1.4.0
+ + alembic==1.17.1
+ + annotated-types==0.7.0
+ + antlr4-python3-runtime==4.9.3
+ + anyio==4.11.0
+ + attrs==25.4.0
+ + certifi==2025.10.5
+ + charset-normalizer==3.4.4
+ + click==8.3.0
+ + colorlog==6.10.1
+ + contourpy==1.3.3
+ + cycler==0.12.1
+ + datasets==4.4.1
+ + dill==0.4.0
+ + evaluate==0.4.6
+ + filelock==3.20.0
+ + fonttools==4.60.1
+ + frozenlist==1.8.0
+ + fsspec==2025.10.0
+ + gitdb==4.0.12
+ + gitpython==3.1.45
+ + greenlet==3.2.4
+ + h11==0.16.0
+ + hf-xet==1.2.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + huggingface-hub==0.36.0
+ + hydra-core==1.3.2
+ + idna==3.11
+ + jinja2==3.1.6
+ + joblib==1.5.2
+ + kiwisolver==1.4.9
+ + mako==1.3.10
+ + markupsafe==3.0.3
+ + matplotlib==3.10.7
+ + mpmath==1.3.0
+ + multidict==6.7.0
+ + multiprocess==0.70.18
+ + networkx==3.5
+ + numpy==2.3.4
+ + nvidia-cublas-cu12==12.8.4.1
+ + nvidia-cuda-cupti-cu12==12.8.90
+ + nvidia-cuda-nvrtc-cu12==12.8.93
+ + nvidia-cuda-runtime-cu12==12.8.90
+ + nvidia-cudnn-cu12==9.10.2.21
+ + nvidia-cufft-cu12==11.3.3.83
+ + nvidia-cufile-cu12==1.13.1.3
+ + nvidia-curand-cu12==10.3.9.90
+ + nvidia-cusolver-cu12==11.7.3.90
+ + nvidia-cusparse-cu12==12.5.8.93
+ + nvidia-cusparselt-cu12==0.7.1
+ + nvidia-nccl-cu12==2.27.5
+ + nvidia-nvjitlink-cu12==12.8.93
+ + nvidia-nvshmem-cu12==3.3.20
+ + nvidia-nvtx-cu12==12.8.90
+ + omegaconf==2.3.0
+ + optuna==4.5.0
+ + packaging==25.0
+ + pandas==2.3.3
+ + pillow==12.0.0
+ + platformdirs==4.5.0
+ + propcache==0.4.1
+ + protobuf==6.33.0
+ + pyarrow==22.0.0
+ + pydantic==2.12.4
+ + pydantic-core==2.41.5
+ + pyparsing==3.2.5
+ + python-dateutil==2.9.0.post0
+ + pytz==2025.2
+ + pyyaml==6.0.3
+ + regex==2025.11.3
+ + requests==2.32.5
+ + safetensors==0.6.2
+ + scikit-learn==1.7.2
+ + scipy==1.16.3
+ + seaborn==0.13.2
+ + sentry-sdk==2.43.0
+ + seqeval==1.2.2
+ + six==1.17.0
+ + smmap==5.0.2
+ + sniffio==1.3.1
+ + sqlalchemy==2.0.44
+ + sympy==1.14.0
+ + threadpoolctl==3.6.0
+ + tokenizers==0.22.1
+ + torch==2.9.0
+ + tqdm==4.67.1
+ + transformers==4.57.1
+ + triton==3.5.0
+ + typing-extensions==4.15.0
+ + typing-inspection==0.4.2
+ + tzdata==2025.2
+ + unihyperlora-experiments==0.1.0 (from file:///home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa)
+ + urllib3==2.5.0
+ + wandb==0.22.3
+ + xxhash==3.6.0
+ + yarl==1.22.0
+Generating train split:   0%|          | 0/14041 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 14041/14041 [00:00<00:00, 198800.36 examples/s]
+Generating validation split:   0%|          | 0/3250 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 3250/3250 [00:00<00:00, 254480.23 examples/s]
+Generating test split:   0%|          | 0/3453 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 3453/3453 [00:00<00:00, 270628.07 examples/s]
+Map:   0%|          | 0/14041 [00:00<?, ? examples/s]Map:  14%|█▍        | 2000/14041 [00:00<00:00, 15649.07 examples/s]Map:  28%|██▊       | 4000/14041 [00:00<00:00, 16578.04 examples/s]Map:  43%|████▎     | 6000/14041 [00:00<00:00, 16931.33 examples/s]Map:  57%|█████▋    | 8000/14041 [00:00<00:00, 16061.48 examples/s]Map:  71%|███████   | 10000/14041 [00:00<00:00, 15437.42 examples/s]Map:  85%|████████▌ | 12000/14041 [00:00<00:00, 14894.84 examples/s]Map: 100%|█████████▉| 14000/14041 [00:00<00:00, 14364.15 examples/s]Map: 100%|██████████| 14041/14041 [00:00<00:00, 14721.58 examples/s]
+Map:   0%|          | 0/3250 [00:00<?, ? examples/s]Map:  62%|██████▏   | 2000/3250 [00:00<00:00, 13651.98 examples/s]Map: 100%|██████████| 3250/3250 [00:00<00:00, 12921.75 examples/s]
+[I 2025-11-07 19:26:25,584] A new study created in memory with name: no-name-0b666b05-63da-4058-9191-0b68e31314c6
+[W 2025-11-07 19:26:25,589] Trial 0 failed with parameters: {'learning_rate': 2.149151856614601e-05} because of the following error: ConfigAttributeError("Key 'learning_rate' is not in struct\n    full_key: learning_rate\n    object_type=dict").
+Traceback (most recent call last):
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/optuna/study/_optimize.py", line 201, in _run_trial
+    value_or_values = func(trial)
+                      ^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py", line 284, in <lambda>
+    lambda trial: _objective(
+                  ^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py", line 186, in _objective
+    _suggest_and_apply(trial, cfg_tmp)
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py", line 174, in _suggest_and_apply
+    OmegaConf.update(cfg, path, value, merge=True)
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/omegaconf.py", line 741, in update
+    root.__setattr__(last_key, value)
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/dictconfig.py", line 337, in __setattr__
+    raise e
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/dictconfig.py", line 334, in __setattr__
+    self.__set_impl(key, value)
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/dictconfig.py", line 318, in __set_impl
+    self._set_item_impl(key, value)
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/basecontainer.py", line 549, in _set_item_impl
+    self._validate_set(key, value)
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/dictconfig.py", line 180, in _validate_set
+    target = self._get_node(key) if key is not None else self
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/dictconfig.py", line 475, in _get_node
+    self._validate_get(key)
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/dictconfig.py", line 164, in _validate_get
+    self._format_and_raise(
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/base.py", line 231, in _format_and_raise
+    format_and_raise(
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/_utils.py", line 899, in format_and_raise
+    _raise(ex, cause)
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/omegaconf/_utils.py", line 797, in _raise
+    raise ex.with_traceback(sys.exc_info()[2])  # set env var OC_CAUSE=1 for full trace
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+omegaconf.errors.ConfigAttributeError: Key 'learning_rate' is not in struct
+    full_key: learning_rate
+    object_type=dict
+[W 2025-11-07 19:26:25,598] Trial 0 failed with value None.
+Error executing job with overrides: ['run=proposed-iter1-CoNLL-2003', 'results_dir=.research/iteration1', 'mode=full']
+Traceback (most recent call last):
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py", line 283, in main
+    study.optimize(
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/optuna/study/study.py", line 490, in optimize
+    _optimize(
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/optuna/study/_optimize.py", line 63, in _optimize
+    _optimize_sequential(
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/optuna/study/_optimize.py", line 160, in _optimize_sequential
+    frozen_trial_id = _run_trial(study, func, catch)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/optuna/study/_optimize.py", line 258, in _run_trial
+    raise func_err
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/lib/python3.11/site-packages/optuna/study/_optimize.py", line 201, in _run_trial
+    value_or_values = func(trial)
+                      ^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py", line 284, in <lambda>
+    lambda trial: _objective(
+                  ^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py", line 186, in _objective
+    _suggest_and_apply(trial, cfg_tmp)
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/train.py", line 174, in _suggest_and_apply
+    OmegaConf.update(cfg, path, value, merge=True)
+omegaconf.errors.ConfigAttributeError: Key 'learning_rate' is not in struct
+    full_key: learning_rate
+    object_type=dict
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Error executing job with overrides: ['run=proposed-iter1-CoNLL-2003', 'results_dir=.research/iteration1', 'mode=full']
+Traceback (most recent call last):
+  File "/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/src/main.py", line 38, in main
+    subprocess.run(cmd, check=True, env=env)
+  File "/home/toma/.local/share/uv/python/cpython-3.11.13-linux-x86_64-gnu/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/home/toma/pt80-1-a-29/_work/airas-20251107-175001-matsuzawa/airas-20251107-175001-matsuzawa/.venv/bin/python3', '-u', '-m', 'src.train', 'run=proposed-iter1-CoNLL-2003', 'results_dir=.research/iteration1', 'mode=full']' returned non-zero exit status 1.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
