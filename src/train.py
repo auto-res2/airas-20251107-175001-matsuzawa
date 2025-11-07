@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import copy
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Tuple
 
@@ -181,7 +182,7 @@ def _objective(
     val_loader: DataLoader,
     device: torch.device,
 ):
-    cfg_tmp = OmegaConf.deepcopy(cfg)
+    cfg_tmp = copy.deepcopy(cfg)
     _suggest_and_apply(trial, cfg_tmp)
 
     model = model_init_fn(cfg_tmp)
